@@ -484,7 +484,7 @@ const Index = () => {
                     <img 
                       src={client.logo} 
                       alt={client.name} 
-                      className="max-w-full max-h-full object-contain filter brightness-0 invert opacity-80 group-hover:opacity-100 transition-all relative z-10" 
+                      className="max-w-full max-h-full object-contain opacity-90 group-hover:opacity-100 transition-all relative z-10" 
                     />
                   </div>
                 </div>
