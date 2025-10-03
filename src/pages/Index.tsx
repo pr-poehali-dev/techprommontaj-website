@@ -55,17 +55,23 @@ const Index = () => {
     { 
       title: 'Промышленный комплекс №1',
       description: 'Монтаж металлоконструкций, 15 000 м²',
-      image: '/img/0be783f2-1c33-4215-8fe4-3402f15496d7.jpg'
+      image: '/img/0be783f2-1c33-4215-8fe4-3402f15496d7.jpg',
+      location: 'Москва',
+      coordinates: { lat: 55.7558, lng: 37.6173 }
     },
     { 
       title: 'Производственный цех',
       description: 'Электромонтажные работы, автоматизация',
-      image: '/img/b633879c-adbb-465a-8a51-46c78671fc57.jpg'
+      image: '/img/b633879c-adbb-465a-8a51-46c78671fc57.jpg',
+      location: 'Санкт-Петербург',
+      coordinates: { lat: 59.9343, lng: 30.3351 }
     },
     { 
       title: 'Складской терминал',
       description: 'Комплексное строительство под ключ',
-      image: '/img/041790ce-a9a1-4ca6-b0c0-df609b7c0e7b.jpg'
+      image: '/img/041790ce-a9a1-4ca6-b0c0-df609b7c0e7b.jpg',
+      location: 'Казань',
+      coordinates: { lat: 55.8304, lng: 49.0661 }
     },
   ];
 
