@@ -12,6 +12,35 @@ const Index = () => {
   const { toast } = useToast();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  // Animation on scroll hook
+  const useScrollAnimation = () => {
+    const [isVisible, setIsVisible] = useState(false);
+    const ref = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            setIsVisible(true);
+          }
+        },
+        { threshold: 0.1 }
+      );
+
+      if (ref.current) {
+        observer.observe(ref.current);
+      }
+
+      return () => {
+        if (ref.current) {
+          observer.unobserve(ref.current);
+        }
+      };
+    }, []);
+
+    return { ref, isVisible };
+  };
+
   const stats = [
     { value: 7, suffix: ' лет', label: 'опыта работы' },
     { value: 7, suffix: '+', label: 'городов в центральных и южных регионах России для работы вахтой' },
@@ -363,41 +392,89 @@ const Index = () => {
             Нам доверяют крупнейшие промышленные предприятия
           </p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto">
-            {clients.map((client, idx) => (
-              <Card key={idx} className="hover:shadow-lg transition-shadow bg-white opacity-0 animate-fade-in" style={{animationDelay: `${idx * 0.1}s`}}>
-                <CardContent className="flex items-center justify-center p-6 h-28">
-                  <img src={client.logo} alt={client.name} className="max-w-full max-h-full object-contain opacity-70 hover:opacity-100 transition-opacity" />
-                </CardContent>
-              </Card>
-            ))}
+            {clients.map((client, idx) => {
+              const scrollAnim = useScrollAnimation();
+              return (
+                <div
+                  key={idx}
+                  ref={scrollAnim.ref}
+                  className={`transform transition-all duration-700 ${
+                    scrollAnim.isVisible 
+                      ? 'opacity-100 scale-100' 
+                      : 'opacity-0 scale-90'
+                  }`}
+                  style={{transitionDelay: `${idx * 100}ms`}}
+                >
+                  <Card className="hover:shadow-lg transition-shadow bg-white h-full">
+                    <CardContent className="flex items-center justify-center p-6 h-28">
+                      <img src={client.logo} alt={client.name} className="max-w-full max-h-full object-contain opacity-70 hover:opacity-100 transition-opacity" />
+                    </CardContent>
+                  </Card>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      <section className="py-20 bg-white overflow-hidden">
+      <section className="py-20 bg-gradient-to-b from-white to-muted/20 overflow-hidden">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 opacity-0 animate-fade-in">К услугам генерального подряда относится</h2>
-          <p className="text-center text-muted-foreground mb-16 max-w-2xl mx-auto opacity-0 animate-fade-in" style={{animationDelay: '0.1s'}}>
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">К услугам генерального подряда относится</h2>
+          <p className="text-center text-muted-foreground mb-16 max-w-2xl mx-auto">
             Полный спектр услуг для реализации строительных проектов любой сложности
           </p>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-w-7xl mx-auto">
-            {services.map((service, idx) => (
-              <Card 
-                key={idx} 
-                className="border-2 hover:border-accent transition-all hover:shadow-xl group opacity-0 animate-fade-in"
-                style={{animationDelay: `${idx * 0.1}s`}}
-              >
-                <CardContent className="p-6 text-center">
-                  <div className="bg-accent/10 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-accent/20 transition-colors">
-                    <Icon name={service.icon as any} size={40} className="text-accent" />
+          <div className="max-w-6xl mx-auto relative">
+            {/* Connecting arrows */}
+            <div className="hidden lg:block absolute inset-0 pointer-events-none">
+              <svg className="w-full h-full" style={{opacity: 0.15}}>
+                {/* Row 1 arrows */}
+                <path d="M 25% 15% Q 37.5% 10%, 50% 15%" stroke="currentColor" strokeWidth="2" fill="none" className="text-accent" strokeDasharray="5,5" />
+                <path d="M 50% 15% Q 62.5% 10%, 75% 15%" stroke="currentColor" strokeWidth="2" fill="none" className="text-accent" strokeDasharray="5,5" />
+                {/* Vertical connectors */}
+                <path d="M 25% 35% Q 25% 42.5%, 25% 50%" stroke="currentColor" strokeWidth="2" fill="none" className="text-accent" strokeDasharray="5,5" />
+                <path d="M 75% 35% Q 75% 42.5%, 75% 50%" stroke="currentColor" strokeWidth="2" fill="none" className="text-accent" strokeDasharray="5,5" />
+                {/* Row 2 arrows */}
+                <path d="M 25% 65% Q 37.5% 60%, 50% 65%" stroke="currentColor" strokeWidth="2" fill="none" className="text-accent" strokeDasharray="5,5" />
+                <path d="M 50% 65% Q 62.5% 60%, 75% 65%" stroke="currentColor" strokeWidth="2" fill="none" className="text-accent" strokeDasharray="5,5" />
+              </svg>
+            </div>
+
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 relative z-10">
+              {services.map((service, idx) => {
+                const scrollAnim = useScrollAnimation();
+                return (
+                  <div 
+                    key={idx}
+                    ref={scrollAnim.ref}
+                    className={`transform transition-all duration-700 ${
+                      scrollAnim.isVisible 
+                        ? 'opacity-100 translate-y-0' 
+                        : 'opacity-0 translate-y-10'
+                    }`}
+                    style={{transitionDelay: `${idx * 100}ms`}}
+                  >
+                    <Card className="border-2 hover:border-accent transition-all hover:shadow-2xl group h-full bg-white relative overflow-hidden">
+                      {/* Number badge */}
+                      <div className="absolute top-4 right-4 w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center group-hover:bg-accent group-hover:scale-110 transition-all">
+                        <span className="text-lg font-bold text-accent group-hover:text-white">{service.number}</span>
+                      </div>
+                      
+                      <CardContent className="p-6 pt-8">
+                        <div className="bg-gradient-to-br from-accent/10 to-accent/5 w-20 h-20 rounded-2xl flex items-center justify-center mb-4 group-hover:from-accent/20 group-hover:to-accent/10 transition-all group-hover:scale-110 group-hover:rotate-3">
+                          <Icon name={service.icon as any} size={40} className="text-accent" />
+                        </div>
+                        <h3 className="text-xl font-bold mb-3 min-h-[3.5rem] flex items-start">{service.title}</h3>
+                        <p className="text-sm text-muted-foreground leading-relaxed">{service.desc}</p>
+                        
+                        {/* Decorative corner */}
+                        <div className="absolute bottom-0 left-0 w-16 h-16 bg-accent/5 rounded-tr-full transform -translate-x-8 translate-y-8 group-hover:translate-x-0 group-hover:translate-y-0 transition-transform"></div>
+                      </CardContent>
+                    </Card>
                   </div>
-                  <div className="text-4xl font-bold text-muted-foreground/20 mb-3">{service.number}</div>
-                  <h3 className="text-lg font-bold mb-3 min-h-[3.5rem] flex items-center justify-center">{service.title}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{service.desc}</p>
-                </CardContent>
-              </Card>
-            ))}
+                );
+              })}
+            </div>
           </div>
         </div>
       </section>
@@ -409,49 +486,88 @@ const Index = () => {
             Реализованные проекты промышленного строительства
           </p>
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {portfolio.map((project, idx) => (
-              <Card key={idx} className="overflow-hidden hover:shadow-xl transition-shadow opacity-0 animate-fade-in" style={{animationDelay: `${idx * 0.15}s`}}>
-                <div className="h-64 overflow-hidden">
-                  <img 
-                    src={project.image} 
-                    alt={project.title}
-                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                  />
+            {portfolio.map((project, idx) => {
+              const scrollAnim = useScrollAnimation();
+              return (
+                <div
+                  key={idx}
+                  ref={scrollAnim.ref}
+                  className={`transform transition-all duration-700 ${
+                    scrollAnim.isVisible 
+                      ? 'opacity-100 translate-y-0' 
+                      : 'opacity-0 translate-y-10'
+                  }`}
+                  style={{transitionDelay: `${idx * 150}ms`}}
+                >
+                  <Card className="overflow-hidden hover:shadow-xl transition-shadow h-full">
+                    <div className="h-64 overflow-hidden">
+                      <img 
+                        src={project.image} 
+                        alt={project.title}
+                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                      />
+                    </div>
+                    <CardContent className="p-6">
+                      <h3 className="text-xl font-bold mb-2">{project.title}</h3>
+                      <p className="text-muted-foreground">{project.description}</p>
+                    </CardContent>
+                  </Card>
                 </div>
-                <CardContent className="p-6">
-                  <h3 className="text-xl font-bold mb-2">{project.title}</h3>
-                  <p className="text-muted-foreground">{project.description}</p>
-                </CardContent>
-              </Card>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
 
-      <section className="py-20 bg-muted/30">
+      <section className="py-20 bg-gradient-to-b from-muted/20 to-white">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">Частые вопросы</h2>
           <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
             Ответы на популярные вопросы о наших услугах
           </p>
 
-          <div className="max-w-3xl mx-auto">
+          <div className="max-w-4xl mx-auto">
             <Accordion type="single" collapsible className="space-y-4">
-              {faqs.map((faq, idx) => (
-                <AccordionItem 
-                  key={idx} 
-                  value={`item-${idx}`}
-                  className="bg-white border-2 border-muted rounded-xl px-6 hover:border-accent transition-all opacity-0 animate-fade-in"
-                  style={{animationDelay: `${idx * 0.1}s`}}
-                >
-                  <AccordionTrigger className="text-left font-semibold hover:text-accent py-6">
-                    {faq.q}
-                  </AccordionTrigger>
-                  <AccordionContent className="text-muted-foreground pb-6 leading-relaxed">
-                    {faq.a}
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
+              {faqs.map((faq, idx) => {
+                const scrollAnim = useScrollAnimation();
+                return (
+                  <div
+                    key={idx}
+                    ref={scrollAnim.ref}
+                    className={`transform transition-all duration-700 ${
+                      scrollAnim.isVisible 
+                        ? 'opacity-100 translate-x-0' 
+                        : 'opacity-0 -translate-x-10'
+                    }`}
+                    style={{transitionDelay: `${idx * 100}ms`}}
+                  >
+                    <AccordionItem 
+                      value={`item-${idx}`}
+                      className="border-2 rounded-xl px-6 bg-white hover:border-accent hover:shadow-lg transition-all group relative overflow-hidden"
+                    >
+                      <div className="absolute left-0 top-0 bottom-0 w-1 bg-accent scale-y-0 group-hover:scale-y-100 transition-transform origin-top"></div>
+                      
+                      <div className="absolute right-6 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-accent/5 flex items-center justify-center group-hover:bg-accent/10 transition-colors">
+                        <span className="text-sm font-bold text-accent">0{idx + 1}</span>
+                      </div>
+                      
+                      <AccordionTrigger className="text-left hover:no-underline py-6 pr-16">
+                        <div className="flex items-start gap-3">
+                          <Icon name="HelpCircle" size={24} className="text-accent mt-1 flex-shrink-0" />
+                          <span className="font-semibold text-lg group-hover:text-accent transition-colors">
+                            {faq.q}
+                          </span>
+                        </div>
+                      </AccordionTrigger>
+                      <AccordionContent className="text-muted-foreground leading-relaxed pb-6 pl-9">
+                        <div className="bg-muted/30 rounded-lg p-4 border-l-4 border-accent/30">
+                          {faq.a}
+                        </div>
+                      </AccordionContent>
+                    </AccordionItem>
+                  </div>
+                );
+              })}
             </Accordion>
           </div>
         </div>
