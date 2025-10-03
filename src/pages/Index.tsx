@@ -283,21 +283,21 @@ const Index = () => {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            <Card className="text-center border-2 hover:border-accent transition-all opacity-0 animate-fade-in" style={{animationDelay: '0.2s'}}>
+            <Card className="text-center border-2 hover:border-accent transition-all opacity-0" style={{animation: 'slideInRotate 0.8s ease-out 0.2s forwards'}}>
               <CardContent className="pt-8">
                 <Icon name="Building2" size={48} className="mx-auto mb-4 text-accent" />
                 <h3 className="text-xl font-bold mb-2">Опыт</h3>
                 <p className="text-muted-foreground">Работа с крупнейшими промышленными предприятиями</p>
               </CardContent>
             </Card>
-            <Card className="text-center border-2 hover:border-accent transition-all opacity-0 animate-fade-in" style={{animationDelay: '0.3s'}}>
+            <Card className="text-center border-2 hover:border-accent transition-all opacity-0" style={{animation: 'slideInBlur 0.8s ease-out 0.4s forwards'}}>
               <CardContent className="pt-8">
                 <Icon name="Users" size={48} className="mx-auto mb-4 text-accent" />
                 <h3 className="text-xl font-bold mb-2">Работа вахтой</h3>
                 <p className="text-muted-foreground">Предоставляем вакансии по 50+ специальностям</p>
               </CardContent>
             </Card>
-            <Card className="text-center border-2 hover:border-accent transition-all opacity-0 animate-fade-in" style={{animationDelay: '0.4s'}}>
+            <Card className="text-center border-2 hover:border-accent transition-all opacity-0" style={{animation: 'slideInRotate 0.8s ease-out 0.6s forwards'}}>
               <CardContent className="pt-8">
                 <Icon name="Award" size={48} className="mx-auto mb-4 text-accent" />
                 <h3 className="text-xl font-bold mb-2">Качество</h3>
@@ -398,12 +398,10 @@ const Index = () => {
                 <div
                   key={idx}
                   ref={scrollAnim.ref}
-                  className={`transform transition-all duration-700 ${
-                    scrollAnim.isVisible 
-                      ? 'opacity-100 scale-100' 
-                      : 'opacity-0 scale-90'
-                  }`}
-                  style={{transitionDelay: `${idx * 100}ms`}}
+                  className={scrollAnim.isVisible ? '' : 'opacity-0'}
+                  style={{
+                    animation: scrollAnim.isVisible ? `bounceIn 0.7s ease-out ${idx * 80}ms forwards` : 'none'
+                  }}
                 >
                   <Card className="hover:shadow-lg transition-shadow bg-white h-full">
                     <CardContent className="flex items-center justify-center p-6 h-28">
@@ -447,12 +445,10 @@ const Index = () => {
                   <div 
                     key={idx}
                     ref={scrollAnim.ref}
-                    className={`transform transition-all duration-700 ${
-                      scrollAnim.isVisible 
-                        ? 'opacity-100 translate-y-0' 
-                        : 'opacity-0 translate-y-10'
-                    }`}
-                    style={{transitionDelay: `${idx * 100}ms`}}
+                    className={scrollAnim.isVisible ? '' : 'opacity-0'}
+                    style={{
+                      animation: scrollAnim.isVisible ? `flipIn 0.8s ease-out ${idx * 100}ms forwards` : 'none'
+                    }}
                   >
                     <Card className="border-2 hover:border-accent transition-all hover:shadow-2xl group h-full bg-white relative overflow-hidden">
                       {/* Number badge */}
@@ -492,12 +488,10 @@ const Index = () => {
                 <div
                   key={idx}
                   ref={scrollAnim.ref}
-                  className={`transform transition-all duration-700 ${
-                    scrollAnim.isVisible 
-                      ? 'opacity-100 translate-y-0' 
-                      : 'opacity-0 translate-y-10'
-                  }`}
-                  style={{transitionDelay: `${idx * 150}ms`}}
+                  className={scrollAnim.isVisible ? '' : 'opacity-0'}
+                  style={{
+                    animation: scrollAnim.isVisible ? `zoomRotate 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) ${idx * 120}ms forwards` : 'none'
+                  }}
                 >
                   <Card className="overflow-hidden hover:shadow-xl transition-shadow h-full">
                     <div className="h-64 overflow-hidden">
@@ -534,12 +528,10 @@ const Index = () => {
                   <div
                     key={idx}
                     ref={scrollAnim.ref}
-                    className={`transform transition-all duration-700 ${
-                      scrollAnim.isVisible 
-                        ? 'opacity-100 translate-x-0' 
-                        : 'opacity-0 -translate-x-10'
-                    }`}
-                    style={{transitionDelay: `${idx * 100}ms`}}
+                    className={scrollAnim.isVisible ? '' : 'opacity-0'}
+                    style={{
+                      animation: scrollAnim.isVisible ? `morphIn 0.9s cubic-bezier(0.68, -0.55, 0.27, 1.55) ${idx * 100}ms forwards` : 'none'
+                    }}
                   >
                     <AccordionItem 
                       value={`item-${idx}`}
