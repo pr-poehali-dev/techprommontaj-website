@@ -67,11 +67,11 @@ const Index = () => {
       coordinates: { lat: 59.9343, lng: 30.3351 }
     },
     { 
-      title: 'Складской терминал',
+      title: 'Портовый комплекс',
       description: 'Комплексное строительство под ключ',
       image: '/img/041790ce-a9a1-4ca6-b0c0-df609b7c0e7b.jpg',
-      location: 'Казань',
-      coordinates: { lat: 55.8304, lng: 49.0661 }
+      location: 'Владивосток',
+      coordinates: { lat: 43.1155, lng: 131.8855 }
     },
   ];
 

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, memo } from 'react';
+import { useState, memo } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import Icon from '@/components/ui/icon';
 
@@ -15,34 +15,6 @@ interface PortfolioSectionProps {
 }
 
 type ViewMode = 'list' | 'map';
-
-const useScrollAnimation = () => {
-  const [isVisible, setIsVisible] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
-
-    return () => {
-      if (ref.current) {
-        observer.unobserve(ref.current);
-      }
-    };
-  }, []);
-
-  return { ref, isVisible };
-};
 
 const PortfolioSection = memo(({ portfolio }: PortfolioSectionProps) => {
   const [viewMode, setViewMode] = useState<ViewMode>('list');
@@ -80,42 +52,35 @@ const PortfolioSection = memo(({ portfolio }: PortfolioSectionProps) => {
             На карте
           </button>
         </div>
+
         {viewMode === 'list' ? (
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {portfolio.map((project, idx) => {
-              const scrollAnim = useScrollAnimation();
-              return (
-                <div
-                  key={idx}
-                  ref={scrollAnim.ref}
-                  className={`transform transition-all duration-700 ${
-                    scrollAnim.isVisible 
-                      ? 'opacity-100 translate-y-0' 
-                      : 'opacity-0 translate-y-10'
-                  }`}
-                  style={{transitionDelay: `${idx * 150}ms`}}
-                >
-                  <Card className="overflow-hidden hover:shadow-xl transition-shadow h-full">
-                    <div className="h-64 overflow-hidden">
-                      <img 
-                        src={project.image} 
-                        alt={project.title}
-                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                        loading="lazy"
-                      />
-                    </div>
-                    <CardContent className="p-6">
-                      <h3 className="text-xl font-bold mb-2">{project.title}</h3>
-                      <p className="text-sm text-muted-foreground mb-2 flex items-center gap-1">
-                        <Icon name="MapPin" size={16} />
-                        {project.location}
-                      </p>
-                      <p className="text-muted-foreground">{project.description}</p>
-                    </CardContent>
-                  </Card>
-                </div>
-              );
-            })}
+            {portfolio.map((project, idx) => (
+              <div
+                key={idx}
+                className="transform transition-all duration-700 opacity-100 translate-y-0"
+                style={{transitionDelay: `${idx * 150}ms`}}
+              >
+                <Card className="overflow-hidden hover:shadow-xl transition-shadow h-full">
+                  <div className="h-64 overflow-hidden">
+                    <img 
+                      src={project.image} 
+                      alt={project.title}
+                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                      loading="lazy"
+                    />
+                  </div>
+                  <CardContent className="p-6">
+                    <h3 className="text-xl font-bold mb-2">{project.title}</h3>
+                    <p className="text-sm text-muted-foreground mb-2 flex items-center gap-1">
+                      <Icon name="MapPin" size={16} />
+                      {project.location}
+                    </p>
+                    <p className="text-muted-foreground">{project.description}</p>
+                  </CardContent>
+                </Card>
+              </div>
+            ))}
           </div>
         ) : (
           <div className="max-w-6xl mx-auto">
@@ -144,8 +109,12 @@ const PortfolioSection = memo(({ portfolio }: PortfolioSectionProps) => {
                 </g>
                 
                 {portfolio.map((project, idx) => {
-                  const x = 200 + idx * 300;
-                  const y = 280 + (idx % 2) * 50;
+                  const positions = [
+                    { x: 280, y: 300 },
+                    { x: 320, y: 280 },
+                    { x: 880, y: 270 }
+                  ];
+                  const pos = positions[idx] || { x: 500, y: 300 };
                   const isHovered = hoveredProject === idx;
                   
                   return (
@@ -157,16 +126,16 @@ const PortfolioSection = memo(({ portfolio }: PortfolioSectionProps) => {
                       style={{ transition: 'all 0.3s ease' }}
                     >
                       <circle
-                        cx={x}
-                        cy={y}
+                        cx={pos.x}
+                        cy={pos.y}
                         r={isHovered ? 16 : 12}
                         fill="hsl(var(--primary))"
                         filter={isHovered ? 'url(#glow)' : ''}
                         className="transition-all duration-300"
                       />
                       <circle
-                        cx={x}
-                        cy={y}
+                        cx={pos.x}
+                        cy={pos.y}
                         r={isHovered ? 24 : 20}
                         fill="hsl(var(--primary))"
                         opacity="0.2"
@@ -176,8 +145,8 @@ const PortfolioSection = memo(({ portfolio }: PortfolioSectionProps) => {
                       {isHovered && (
                         <g>
                           <rect
-                            x={x - 120}
-                            y={y - 140}
+                            x={pos.x - 120}
+                            y={pos.y - 140}
                             width="240"
                             height="120"
                             rx="12"
@@ -188,8 +157,8 @@ const PortfolioSection = memo(({ portfolio }: PortfolioSectionProps) => {
                             className="animate-in fade-in zoom-in-95 duration-200"
                           />
                           <text 
-                            x={x} 
-                            y={y - 105} 
+                            x={pos.x} 
+                            y={pos.y - 105} 
                             textAnchor="middle" 
                             className="fill-slate-900 font-bold"
                             style={{fontSize: '16px'}}
@@ -197,15 +166,15 @@ const PortfolioSection = memo(({ portfolio }: PortfolioSectionProps) => {
                             {project.title}
                           </text>
                           <text 
-                            x={x} 
-                            y={y - 80} 
+                            x={pos.x} 
+                            y={pos.y - 80} 
                             textAnchor="middle" 
                             className="fill-slate-600"
                             style={{fontSize: '12px'}}
                           >
                             📍 {project.location}
                           </text>
-                          <foreignObject x={x - 110} y={y - 68} width="220" height="50">
+                          <foreignObject x={pos.x - 110} y={pos.y - 68} width="220" height="50">
                             <div className="text-xs text-slate-500 text-center px-2">
                               {project.description}
                             </div>
