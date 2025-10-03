@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { Button } from '@/components/ui/button';
 import Icon from '@/components/ui/icon';
 
@@ -7,16 +8,19 @@ interface HeroSectionProps {
   setCurrentImageIndex: (index: number) => void;
 }
 
-const HeroSection = ({ heroImages, currentImageIndex, setCurrentImageIndex }: HeroSectionProps) => {
+const HeroSection = memo(({ heroImages, currentImageIndex, setCurrentImageIndex }: HeroSectionProps) => {
   return (
     <section className="relative bg-gradient-to-br from-primary to-primary/80 text-white min-h-[90vh] flex items-center overflow-hidden">
       {heroImages.map((img, idx) => (
         <div 
           key={idx}
-          className={`absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ${
+          className={`absolute inset-0 bg-cover bg-center will-change-opacity ${
             idx === currentImageIndex ? 'opacity-30' : 'opacity-0'
           }`}
-          style={{backgroundImage: `url(${img})`}}
+          style={{
+            backgroundImage: `url(${img})`,
+            transition: 'opacity 1s ease-in-out'
+          }}
         />
       ))}
       
@@ -90,6 +94,8 @@ const HeroSection = ({ heroImages, currentImageIndex, setCurrentImageIndex }: He
       </div>
     </section>
   );
-};
+});
+
+HeroSection.displayName = 'HeroSection';
 
 export default HeroSection;

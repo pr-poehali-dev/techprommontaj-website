@@ -1,15 +1,16 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import Header from '@/components/sections/Header';
 import HeroSection from '@/components/sections/HeroSection';
 import AboutSection from '@/components/sections/AboutSection';
-import WorkflowSection from '@/components/sections/WorkflowSection';
-import ClientsSection from '@/components/sections/ClientsSection';
-import ServicesSection from '@/components/sections/ServicesSection';
-import PortfolioSection from '@/components/sections/PortfolioSection';
-import FAQSection from '@/components/sections/FAQSection';
-import ContactSection from '@/components/sections/ContactSection';
-import Footer from '@/components/sections/Footer';
+
+const WorkflowSection = lazy(() => import('@/components/sections/WorkflowSection'));
+const ClientsSection = lazy(() => import('@/components/sections/ClientsSection'));
+const ServicesSection = lazy(() => import('@/components/sections/ServicesSection'));
+const PortfolioSection = lazy(() => import('@/components/sections/PortfolioSection'));
+const FAQSection = lazy(() => import('@/components/sections/FAQSection'));
+const ContactSection = lazy(() => import('@/components/sections/ContactSection'));
+const Footer = lazy(() => import('@/components/sections/Footer'));
 
 const Index = () => {
   const [formData, setFormData] = useState({ name: '', phone: '', message: '' });
@@ -119,23 +120,37 @@ const Index = () => {
 
       <AboutSection stats={stats} />
 
-      <WorkflowSection />
+      <Suspense fallback={<div className="py-20 bg-gradient-to-br from-primary to-primary/90"></div>}>
+        <ClientsSection clients={clients} />
+      </Suspense>
 
-      <ClientsSection clients={clients} />
+      <Suspense fallback={<div className="py-20 bg-gradient-to-b from-white to-muted/20"></div>}>
+        <ServicesSection services={services} />
+      </Suspense>
 
-      <ServicesSection services={services} />
+      <Suspense fallback={<div className="py-20 bg-gradient-to-br from-primary to-primary/90"></div>}>
+        <WorkflowSection />
+      </Suspense>
 
-      <PortfolioSection portfolio={portfolio} />
+      <Suspense fallback={<div className="py-20 bg-white"></div>}>
+        <PortfolioSection portfolio={portfolio} />
+      </Suspense>
 
-      <FAQSection faqs={faqs} />
+      <Suspense fallback={<div className="py-20 bg-gradient-to-b from-muted/20 to-white"></div>}>
+        <FAQSection faqs={faqs} />
+      </Suspense>
 
-      <ContactSection 
-        formData={formData}
-        setFormData={setFormData}
-        handleSubmit={handleSubmit}
-      />
+      <Suspense fallback={<div className="py-20 bg-primary"></div>}>
+        <ContactSection 
+          formData={formData}
+          setFormData={setFormData}
+          handleSubmit={handleSubmit}
+        />
+      </Suspense>
 
-      <Footer />
+      <Suspense fallback={null}>
+        <Footer />
+      </Suspense>
     </div>
   );
 };

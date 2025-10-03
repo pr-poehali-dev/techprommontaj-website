@@ -1,6 +1,7 @@
-import { useState, useEffect, useRef } from 'react';
+import { memo } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import Icon from '@/components/ui/icon';
+import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
 interface Service {
   icon: string;
@@ -13,35 +14,7 @@ interface ServicesSectionProps {
   services: Service[];
 }
 
-const useScrollAnimation = () => {
-  const [isVisible, setIsVisible] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
-
-    return () => {
-      if (ref.current) {
-        observer.unobserve(ref.current);
-      }
-    };
-  }, []);
-
-  return { ref, isVisible };
-};
-
-const ServicesSection = ({ services }: ServicesSectionProps) => {
+const ServicesSection = memo(({ services }: ServicesSectionProps) => {
   return (
     <section className="py-20 bg-gradient-to-b from-white to-muted/20 overflow-hidden">
       <div className="container mx-auto px-4">
@@ -99,6 +72,8 @@ const ServicesSection = ({ services }: ServicesSectionProps) => {
       </div>
     </section>
   );
-};
+});
+
+ServicesSection.displayName = 'ServicesSection';
 
 export default ServicesSection;
