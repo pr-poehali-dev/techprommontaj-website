@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -9,6 +9,59 @@ import { useToast } from '@/hooks/use-toast';
 const Index = () => {
   const [formData, setFormData] = useState({ name: '', phone: '', message: '' });
   const { toast } = useToast();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const stats = [
+    { value: 7, suffix: ' лет', label: 'опыта работы' },
+    { value: 7, suffix: '+', label: 'городов в центральных и южных регионах России для работы вахтой' },
+    { value: 50, suffix: '+', label: 'рабочих специальностей по которым мы предлагаем вакансии вахтой' },
+    { value: 2000, suffix: '+', label: 'сотрудников уже работают в компании' }
+  ];
+
+  const CounterAnimation = ({ target, suffix }: { target: number; suffix: string }) => {
+    const [count, setCount] = useState(0);
+    const [hasAnimated, setHasAnimated] = useState(false);
+    const counterRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting && !hasAnimated) {
+            setHasAnimated(true);
+            const duration = 2000;
+            const steps = 60;
+            const increment = target / steps;
+            let current = 0;
+
+            const timer = setInterval(() => {
+              current += increment;
+              if (current >= target) {
+                setCount(target);
+                clearInterval(timer);
+              } else {
+                setCount(Math.floor(current));
+              }
+            }, duration / steps);
+
+            return () => clearInterval(timer);
+          }
+        },
+        { threshold: 0.5 }
+      );
+
+      if (counterRef.current) {
+        observer.observe(counterRef.current);
+      }
+
+      return () => observer.disconnect();
+    }, [target, hasAnimated]);
+
+    return (
+      <div ref={counterRef} className="text-5xl md:text-6xl font-bold text-accent mb-2">
+        {count}{suffix}
+      </div>
+    );
+  };
 
   const clients = [
     { name: 'Айэс', logo: 'https://via.placeholder.com/150x80/64748B/FFFFFF?text=ИС' },
@@ -50,17 +103,68 @@ const Index = () => {
 
   return (
     <div className="min-h-screen">
-      <header className="bg-primary text-primary-foreground sticky top-0 z-50 shadow-lg">
+      <header className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-md">
+        <div className="bg-primary text-white py-2">
+          <div className="container mx-auto px-4">
+            <div className="flex items-center justify-between text-sm">
+              <div className="flex items-center gap-2">
+                <Icon name="MapPin" size={16} className="text-accent" />
+                <span className="font-medium">Работаем по СПб и Ленинградской области!</span>
+              </div>
+              <div className="hidden md:flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <Icon name="Mail" size={16} />
+                  <span>tehprommontaj@gmail.com</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
         <div className="container mx-auto px-4 py-4">
           <nav className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold">ТЕХПРОММОНТАЖ</h1>
-            <div className="hidden md:flex gap-6">
-              <a href="#about" className="hover:text-accent transition-colors">О нас</a>
-              <a href="#clients" className="hover:text-accent transition-colors">Клиенты</a>
-              <a href="#portfolio" className="hover:text-accent transition-colors">Портфолио</a>
-              <a href="#contact" className="hover:text-accent transition-colors">Контакты</a>
+            <h1 className="text-2xl md:text-3xl font-bold text-primary">ТЕХПРОММОНТАЖ</h1>
+            
+            <div className="hidden lg:flex items-center gap-8">
+              <a href="#about" className="text-foreground hover:text-accent transition-colors font-medium">О нас</a>
+              <a href="#clients" className="text-foreground hover:text-accent transition-colors font-medium">Клиенты</a>
+              <a href="#portfolio" className="text-foreground hover:text-accent transition-colors font-medium">Портфолио</a>
+              <a href="#contact" className="text-foreground hover:text-accent transition-colors font-medium">Контакты</a>
+              
+              <Button 
+                size="lg" 
+                className="bg-green-600 hover:bg-green-700 text-white flex items-center gap-2"
+                onClick={() => window.location.href = 'tel:+79006312247'}
+              >
+                <Icon name="Phone" size={18} />
+                Позвонить
+              </Button>
             </div>
+
+            <button 
+              className="lg:hidden text-primary"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
+              <Icon name={isMenuOpen ? "X" : "Menu"} size={28} />
+            </button>
           </nav>
+
+          {isMenuOpen && (
+            <div className="lg:hidden mt-4 pb-4 space-y-3 border-t pt-4">
+              <a href="#about" className="block text-foreground hover:text-accent transition-colors font-medium">О нас</a>
+              <a href="#clients" className="block text-foreground hover:text-accent transition-colors font-medium">Клиенты</a>
+              <a href="#portfolio" className="block text-foreground hover:text-accent transition-colors font-medium">Портфолио</a>
+              <a href="#contact" className="block text-foreground hover:text-accent transition-colors font-medium">Контакты</a>
+              <Button 
+                size="lg" 
+                className="w-full bg-green-600 hover:bg-green-700 text-white flex items-center justify-center gap-2"
+                onClick={() => window.location.href = 'tel:+79006312247'}
+              >
+                <Icon name="Phone" size={18} />
+                Позвонить
+              </Button>
+            </div>
+          )}
         </div>
       </header>
 
@@ -83,20 +187,34 @@ const Index = () => {
 
       <section id="about" className="py-20 bg-white">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">О компании</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">О компании</h2>
+          <p className="text-center text-muted-foreground mb-16 max-w-3xl mx-auto text-lg">
+            Техпроммонтаж — надёжная подрядная организация с многолетним опытом. 
+            Мы предоставляем работу вахтой по всей России и гарантируем профессиональное выполнение проектов.
+          </p>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto mb-16">
+            {stats.map((stat, idx) => (
+              <div key={idx} className="text-center p-6 rounded-lg bg-gradient-to-br from-muted/30 to-white border border-muted hover:shadow-xl transition-all">
+                <CounterAnimation target={stat.value} suffix={stat.suffix} />
+                <p className="text-muted-foreground leading-relaxed">{stat.label}</p>
+              </div>
+            ))}
+          </div>
+
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             <Card className="text-center border-2 hover:border-accent transition-all">
               <CardContent className="pt-8">
                 <Icon name="Building2" size={48} className="mx-auto mb-4 text-accent" />
                 <h3 className="text-xl font-bold mb-2">Опыт</h3>
-                <p className="text-muted-foreground">Более 15 лет на рынке промышленного строительства</p>
+                <p className="text-muted-foreground">Работа с крупнейшими промышленными предприятиями</p>
               </CardContent>
             </Card>
             <Card className="text-center border-2 hover:border-accent transition-all">
               <CardContent className="pt-8">
                 <Icon name="Users" size={48} className="mx-auto mb-4 text-accent" />
-                <h3 className="text-xl font-bold mb-2">Команда</h3>
-                <p className="text-muted-foreground">Квалифицированные специалисты и современное оборудование</p>
+                <h3 className="text-xl font-bold mb-2">Работа вахтой</h3>
+                <p className="text-muted-foreground">Предоставляем вакансии по 50+ специальностям</p>
               </CardContent>
             </Card>
             <Card className="text-center border-2 hover:border-accent transition-all">
