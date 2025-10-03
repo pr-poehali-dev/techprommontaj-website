@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import Icon from '@/components/ui/icon';
 import { useToast } from '@/hooks/use-toast';
 
@@ -101,6 +102,32 @@ const Index = () => {
     setFormData({ name: '', phone: '', message: '' });
   };
 
+  const smoothScroll = (e: React.MouseEvent<HTMLAnchorElement>, target: string) => {
+    e.preventDefault();
+    const element = document.querySelector(target);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
+  const services = [
+    { icon: 'Blueprint', number: '01', title: 'Создание строительных проектов', desc: 'Подбор оптимального метода управления процессом строительства на объекте' },
+    { icon: 'Search', number: '02', title: 'Контроль за проведением работ', desc: 'Контроль всех видов работ на строительной площадке' },
+    { icon: 'Building', number: '03', title: 'Координируемое строительство', desc: 'Строительство зданий любой сложности, реконструкция зданий' },
+    { icon: 'Crane', number: '04', title: 'Установка оборудования', desc: 'Установка строительного оборудования и различных механизмов для процесса возведения объекта' },
+    { icon: 'HardHat', number: '05', title: 'Проведение мероприятий', desc: 'Соблюдение техники безопасности, защита окружающей среды и охрана труда' },
+    { icon: 'FileCheck', number: '06', title: 'Получение разрешения', desc: 'Получение разрешения на строительство, получение ТУ, ведение строительства в государственных органах' },
+    { icon: 'Key', number: '07', title: 'Ввод объекта в эксплуатацию', desc: 'Финальная сдача объекта заказчику с полным пакетом документов' },
+  ];
+
+  const faqs = [
+    { q: 'Какие регионы вы обслуживаете?', a: 'Мы работаем по Санкт-Петербургу и Ленинградской области. Также предоставляем работу вахтовым методом в 7+ городах центральных и южных регионов России.' },
+    { q: 'Какие документы необходимы для начала работы?', a: 'Для начала сотрудничества потребуется техническое задание и проектная документация. Наши специалисты помогут подготовить все необходимые разрешения и согласования.' },
+    { q: 'Предоставляете ли вы гарантию на выполненные работы?', a: 'Да, мы предоставляем гарантию на все виды выполненных работ. Срок гарантии определяется договором и видом работ.' },
+    { q: 'Работаете ли вы с юридическими лицами?', a: 'Да, мы работаем как с юридическими, так и с физическими лицами. Все работы выполняются по договору с полным пакетом документов.' },
+    { q: 'Как происходит оплата?', a: 'Оплата производится поэтапно согласно договору. Возможна предоплата и оплата по факту выполнения работ.' },
+  ];
+
   return (
     <div className="min-h-screen">
       <header className="sticky top-0 z-50">
@@ -143,10 +170,10 @@ const Index = () => {
               </div>
               
               <div className="hidden lg:flex items-center gap-1">
-                <a href="#about" className="px-4 py-2 text-foreground hover:text-accent transition-colors font-medium rounded-lg hover:bg-accent/5">О нас</a>
-                <a href="#clients" className="px-4 py-2 text-foreground hover:text-accent transition-colors font-medium rounded-lg hover:bg-accent/5">Клиенты</a>
-                <a href="#portfolio" className="px-4 py-2 text-foreground hover:text-accent transition-colors font-medium rounded-lg hover:bg-accent/5">Портфолио</a>
-                <a href="#contact" className="px-4 py-2 text-foreground hover:text-accent transition-colors font-medium rounded-lg hover:bg-accent/5">Контакты</a>
+                <a href="#about" onClick={(e) => smoothScroll(e, '#about')} className="px-4 py-2 text-foreground hover:text-accent transition-colors font-medium rounded-lg hover:bg-accent/5">О нас</a>
+                <a href="#clients" onClick={(e) => smoothScroll(e, '#clients')} className="px-4 py-2 text-foreground hover:text-accent transition-colors font-medium rounded-lg hover:bg-accent/5">Клиенты</a>
+                <a href="#portfolio" onClick={(e) => smoothScroll(e, '#portfolio')} className="px-4 py-2 text-foreground hover:text-accent transition-colors font-medium rounded-lg hover:bg-accent/5">Портфолио</a>
+                <a href="#contact" onClick={(e) => smoothScroll(e, '#contact')} className="px-4 py-2 text-foreground hover:text-accent transition-colors font-medium rounded-lg hover:bg-accent/5">Контакты</a>
                 
                 <div className="ml-4 flex items-center gap-3">
                   <a href="tel:+79006312247" className="text-primary hover:text-accent font-bold text-lg transition-colors">+7 (900) 631-22-47</a>
@@ -171,10 +198,10 @@ const Index = () => {
 
             {isMenuOpen && (
               <div className="lg:hidden mt-6 pb-4 space-y-2 border-t pt-6 animate-fade-in">
-                <a href="#about" className="block px-4 py-3 text-foreground hover:text-accent hover:bg-accent/5 transition-colors font-medium rounded-lg">О нас</a>
-                <a href="#clients" className="block px-4 py-3 text-foreground hover:text-accent hover:bg-accent/5 transition-colors font-medium rounded-lg">Клиенты</a>
-                <a href="#portfolio" className="block px-4 py-3 text-foreground hover:text-accent hover:bg-accent/5 transition-colors font-medium rounded-lg">Портфолио</a>
-                <a href="#contact" className="block px-4 py-3 text-foreground hover:text-accent hover:bg-accent/5 transition-colors font-medium rounded-lg">Контакты</a>
+                <a href="#about" onClick={(e) => smoothScroll(e, '#about')} className="block px-4 py-3 text-foreground hover:text-accent hover:bg-accent/5 transition-colors font-medium rounded-lg">О нас</a>
+                <a href="#clients" onClick={(e) => smoothScroll(e, '#clients')} className="block px-4 py-3 text-foreground hover:text-accent hover:bg-accent/5 transition-colors font-medium rounded-lg">Клиенты</a>
+                <a href="#portfolio" onClick={(e) => smoothScroll(e, '#portfolio')} className="block px-4 py-3 text-foreground hover:text-accent hover:bg-accent/5 transition-colors font-medium rounded-lg">Портфолио</a>
+                <a href="#contact" onClick={(e) => smoothScroll(e, '#contact')} className="block px-4 py-3 text-foreground hover:text-accent hover:bg-accent/5 transition-colors font-medium rounded-lg">Контакты</a>
                 <div className="pt-4 space-y-3">
                   <a href="tel:+79006312247" className="block text-center text-primary font-bold text-xl py-2">+7 (900) 631-22-47</a>
                   <Button 
@@ -227,21 +254,21 @@ const Index = () => {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            <Card className="text-center border-2 hover:border-accent transition-all">
+            <Card className="text-center border-2 hover:border-accent transition-all opacity-0 animate-fade-in" style={{animationDelay: '0.2s'}}>
               <CardContent className="pt-8">
                 <Icon name="Building2" size={48} className="mx-auto mb-4 text-accent" />
                 <h3 className="text-xl font-bold mb-2">Опыт</h3>
                 <p className="text-muted-foreground">Работа с крупнейшими промышленными предприятиями</p>
               </CardContent>
             </Card>
-            <Card className="text-center border-2 hover:border-accent transition-all">
+            <Card className="text-center border-2 hover:border-accent transition-all opacity-0 animate-fade-in" style={{animationDelay: '0.3s'}}>
               <CardContent className="pt-8">
                 <Icon name="Users" size={48} className="mx-auto mb-4 text-accent" />
                 <h3 className="text-xl font-bold mb-2">Работа вахтой</h3>
                 <p className="text-muted-foreground">Предоставляем вакансии по 50+ специальностям</p>
               </CardContent>
             </Card>
-            <Card className="text-center border-2 hover:border-accent transition-all">
+            <Card className="text-center border-2 hover:border-accent transition-all opacity-0 animate-fade-in" style={{animationDelay: '0.4s'}}>
               <CardContent className="pt-8">
                 <Icon name="Award" size={48} className="mx-auto mb-4 text-accent" />
                 <h3 className="text-xl font-bold mb-2">Качество</h3>
@@ -337,9 +364,37 @@ const Index = () => {
           </p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto">
             {clients.map((client, idx) => (
-              <Card key={idx} className="hover:shadow-lg transition-shadow bg-white">
+              <Card key={idx} className="hover:shadow-lg transition-shadow bg-white opacity-0 animate-fade-in" style={{animationDelay: `${idx * 0.1}s`}}>
                 <CardContent className="flex items-center justify-center p-6 h-28">
                   <img src={client.logo} alt={client.name} className="max-w-full max-h-full object-contain opacity-70 hover:opacity-100 transition-opacity" />
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20 bg-white overflow-hidden">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 opacity-0 animate-fade-in">К услугам генерального подряда относится</h2>
+          <p className="text-center text-muted-foreground mb-16 max-w-2xl mx-auto opacity-0 animate-fade-in" style={{animationDelay: '0.1s'}}>
+            Полный спектр услуг для реализации строительных проектов любой сложности
+          </p>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-w-7xl mx-auto">
+            {services.map((service, idx) => (
+              <Card 
+                key={idx} 
+                className="border-2 hover:border-accent transition-all hover:shadow-xl group opacity-0 animate-fade-in"
+                style={{animationDelay: `${idx * 0.1}s`}}
+              >
+                <CardContent className="p-6 text-center">
+                  <div className="bg-accent/10 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-accent/20 transition-colors">
+                    <Icon name={service.icon as any} size={40} className="text-accent" />
+                  </div>
+                  <div className="text-4xl font-bold text-muted-foreground/20 mb-3">{service.number}</div>
+                  <h3 className="text-lg font-bold mb-3 min-h-[3.5rem] flex items-center justify-center">{service.title}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{service.desc}</p>
                 </CardContent>
               </Card>
             ))}
@@ -355,7 +410,7 @@ const Index = () => {
           </p>
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {portfolio.map((project, idx) => (
-              <Card key={idx} className="overflow-hidden hover:shadow-xl transition-shadow">
+              <Card key={idx} className="overflow-hidden hover:shadow-xl transition-shadow opacity-0 animate-fade-in" style={{animationDelay: `${idx * 0.15}s`}}>
                 <div className="h-64 overflow-hidden">
                   <img 
                     src={project.image} 
@@ -369,6 +424,35 @@ const Index = () => {
                 </CardContent>
               </Card>
             ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">Частые вопросы</h2>
+          <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
+            Ответы на популярные вопросы о наших услугах
+          </p>
+
+          <div className="max-w-3xl mx-auto">
+            <Accordion type="single" collapsible className="space-y-4">
+              {faqs.map((faq, idx) => (
+                <AccordionItem 
+                  key={idx} 
+                  value={`item-${idx}`}
+                  className="bg-white border-2 border-muted rounded-xl px-6 hover:border-accent transition-all opacity-0 animate-fade-in"
+                  style={{animationDelay: `${idx * 0.1}s`}}
+                >
+                  <AccordionTrigger className="text-left font-semibold hover:text-accent py-6">
+                    {faq.q}
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground pb-6 leading-relaxed">
+                    {faq.a}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
           </div>
         </div>
       </section>
