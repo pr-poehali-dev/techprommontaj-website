@@ -94,14 +94,14 @@ const Index = () => {
   };
 
   const clients = [
-    { name: 'Айэс', logo: 'https://via.placeholder.com/150x80/64748B/FFFFFF?text=ИС' },
-    { name: 'Промтомск', logo: 'https://via.placeholder.com/150x80/64748B/FFFFFF?text=ПРОМТОМСК' },
-    { name: 'Ленмонтаж', logo: 'https://via.placeholder.com/150x80/64748B/FFFFFF?text=ЛЕНМОНТАЖ' },
-    { name: 'Спецстройинжиниринг', logo: 'https://via.placeholder.com/150x80/64748B/FFFFFF?text=ССИ' },
-    { name: 'Поликомстрой', logo: 'https://via.placeholder.com/150x80/64748B/FFFFFF?text=ПОЛИКОМСТРОЙ' },
-    { name: 'Алькад', logo: 'https://via.placeholder.com/150x80/64748B/FFFFFF?text=АЛЬКАД' },
-    { name: 'АртикЭнергоСтрой', logo: 'https://via.placeholder.com/150x80/64748B/FFFFFF?text=АЭС' },
-    { name: 'ПЗМК', logo: 'https://via.placeholder.com/150x80/64748B/FFFFFF?text=ПЗМК' },
+    { name: 'Айэс', logo: '/img/ff1b73af-2036-4381-bd40-9f3b581b0c00.jpg' },
+    { name: 'Промтомск', logo: '/img/68c75c12-4162-462c-9995-0d5c0639328e.jpg' },
+    { name: 'Ленмонтаж', logo: '/img/5a77f5f7-e5d8-4e86-899b-d2012b2b9fd7.jpg' },
+    { name: 'Спецстройинжиниринг', logo: '/img/13387ebf-04d3-4881-a0fc-dc68a7446596.jpg' },
+    { name: 'Поликомстрой', logo: '/img/a25ff700-9c51-4e87-93ba-2bfae10a67d0.jpg' },
+    { name: 'Алькад', logo: '/img/56dab5cc-1263-4a3c-b934-00b0c4b92ec5.jpg' },
+    { name: 'АртикЭнергоСтрой', logo: '/img/5ad7a239-7905-4e18-9414-97b4210b8eb4.jpg' },
+    { name: 'ПЗМК', logo: '/img/588525ae-42f4-48b9-bc18-19a51e91c012.jpg' },
   ];
 
   const portfolio = [
