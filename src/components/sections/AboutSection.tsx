@@ -64,10 +64,7 @@ const AboutSection = ({ stats }: AboutSectionProps) => {
     <section id="about" className="py-20 bg-white">
       <div className="container mx-auto px-4">
         <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">О компании</h2>
-        <p className="text-center text-muted-foreground mb-16 max-w-3xl mx-auto text-lg">
-          Техпроммонтаж — надёжная подрядная организация с многолетним опытом. 
-          Мы предоставляем работу вахтой по всей России и гарантируем профессиональное выполнение проектов.
-        </p>
+        <p className="text-center text-muted-foreground mb-16 max-w-3xl mx-auto text-lg">Техпроммонтаж — компания, которая помогает бизнесу снизить затраты, сосредоточиться на своей основной деятельности и быстро получить доступ к специалистам и экспертам в определенных областях</p>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8 max-w-6xl mx-auto">
           {stats.map((stat, idx) => (
