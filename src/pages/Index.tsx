@@ -36,10 +36,10 @@ const Index = () => {
   ];
 
   const heroImages = [
-    '/img/0be783f2-1c33-4215-8fe4-3402f15496d7.jpg',
-    '/img/6c795340-a5a3-405b-8f62-fb7ba76417ce.jpg',
-    '/img/4313046a-07a8-4d70-aa07-19d4a4ed66b6.jpg',
-    '/img/b633879c-adbb-465a-8a51-46c78671fc57.jpg'
+    '/img/fbc3e700-3de4-4cd8-af03-67812729d3b2.jpg',
+    '/img/03bd7a22-49d2-4aae-a3e5-e0edc7a0480d.jpg',
+    '/img/590d5b86-ebfd-4de5-a66b-710b1240ce9d.jpg',
+    '/img/eaa2300a-3d72-47c8-b702-c635c688caf2.jpg'
   ];
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -55,75 +55,102 @@ const Index = () => {
     { 
       title: 'Поселок Еруда, работа на ЗИФ 5 "Полюс Красноярск"',
       description: 'Золотоизвлекательная фабрика',
-      image: '/img/0be783f2-1c33-4215-8fe4-3402f15496d7.jpg',
+      image: '/img/fbc3e700-3de4-4cd8-af03-67812729d3b2.jpg',
       location: 'Поселок Еруда, Красноярский край',
       coordinates: { lat: 63.6667, lng: 92.5833 }
     },
     { 
       title: 'Внутриквартальные тепловые магистрали, металлоконструкции на «Приморской ГРЭС»',
       description: 'Тепловые сети и металлоконструкции',
-      image: '/img/b633879c-adbb-465a-8a51-46c78671fc57.jpg',
+      image: '/img/eaa2300a-3d72-47c8-b702-c635c688caf2.jpg',
       location: 'Поселок Лучегорск, Приморский край',
       coordinates: { lat: 46.4667, lng: 134.5 }
     },
     { 
       title: 'УКПГ-1С Заполярного НГКМ',
       description: 'Установка комплексной подготовки газа',
-      image: '/img/041790ce-a9a1-4ca6-b0c0-df609b7c0e7b.jpg',
+      image: '/img/03bd7a22-49d2-4aae-a3e5-e0edc7a0480d.jpg',
       location: 'Новый Уренгой, ЯНАО',
       coordinates: { lat: 66.0833, lng: 76.6333 }
     },
     { 
       title: 'Создание селекционно-племенного центра рыбоводства в Республике Карелия',
       description: 'Рыбоводческий комплекс',
-      image: '/img/041790ce-a9a1-4ca6-b0c0-df609b7c0e7b.jpg',
+      image: '/img/8d40456f-5c7f-48fe-9de1-027f4b46590f.jpg',
       location: 'Сосновец, Республика Карелия',
       coordinates: { lat: 62.7833, lng: 34.3167 }
     },
     { 
       title: 'Компрессорная станция Богандинская',
       description: 'Газокомпрессорная станция',
-      image: '/img/4313046a-07a8-4d70-aa07-19d4a4ed66b6.jpg',
+      image: '/img/590d5b86-ebfd-4de5-a66b-710b1240ce9d.jpg',
       location: 'Тюмень, Тюменская область',
       coordinates: { lat: 57.2667, lng: 65.5333 }
     },
     { 
       title: 'Газовое месторождение Семаковское. УКПГ',
       description: 'Установка комплексной подготовки газа',
-      image: '/img/6c795340-a5a3-405b-8f62-fb7ba76417ce.jpg',
+      image: '/img/03bd7a22-49d2-4aae-a3e5-e0edc7a0480d.jpg',
       location: 'Московская область',
       coordinates: { lat: 55.7558, lng: 37.6173 }
     },
     { 
       title: 'ЗИФ, участок гидрометаллургии ЗИФ АО "Полюс Алдан"',
       description: 'Золотоизвлекательная фабрика',
-      image: '/img/0be783f2-1c33-4215-8fe4-3402f15496d7.jpg',
+      image: '/img/fbc3e700-3de4-4cd8-af03-67812729d3b2.jpg',
       location: 'Поселок Куранах, Республика Саха (Якутия)',
       coordinates: { lat: 58.7, lng: 125.5 }
     },
     { 
       title: 'КГМК',
       description: 'Кольская горно-металлургическая компания',
-      image: '/img/b633879c-adbb-465a-8a51-46c78671fc57.jpg',
+      image: '/img/c02e179e-2ee8-48e9-b7c8-c56c7882c0f1.jpg',
       location: 'г. Заполярный, Мурманская область',
       coordinates: { lat: 69.4167, lng: 30.8167 }
     },
     { 
       title: 'Монтаж рыбофабрики, подведение систем, трубопроводов к механизмам',
       description: 'Рыбоперерабатывающий комплекс',
-      image: '/img/041790ce-a9a1-4ca6-b0c0-df609b7c0e7b.jpg',
+      image: '/img/8d40456f-5c7f-48fe-9de1-027f4b46590f.jpg',
       location: 'Санкт-Петербург',
       coordinates: { lat: 59.9343, lng: 30.3351 }
     }
   ];
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast({
-      title: 'Заявка отправлена!',
-      description: 'Мы свяжемся с вами в ближайшее время.',
-    });
-    setFormData({ name: '', phone: '', message: '' });
+    
+    try {
+      const response = await fetch('https://functions.poehali.dev/c9ef9134-048c-4ea9-97ae-5450c761ee19', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+      });
+      
+      const result = await response.json();
+      
+      if (response.ok) {
+        toast({
+          title: 'Заявка отправлена!',
+          description: 'Мы свяжемся с вами в ближайшее время.',
+        });
+        setFormData({ name: '', phone: '', message: '' });
+      } else {
+        toast({
+          title: 'Ошибка отправки',
+          description: result.error || 'Попробуйте позже',
+          variant: 'destructive'
+        });
+      }
+    } catch (error) {
+      toast({
+        title: 'Ошибка сети',
+        description: 'Проверьте подключение к интернету',
+        variant: 'destructive'
+      });
+    }
   };
 
   const smoothScroll = (e: React.MouseEvent<HTMLAnchorElement>, target: string) => {

@@ -1,6 +1,7 @@
 import { memo } from 'react';
 import { Button } from '@/components/ui/button';
 import Icon from '@/components/ui/icon';
+import CallButton from '@/components/ui/CallButton';
 
 interface HeroSectionProps {
   heroImages: string[];
@@ -58,14 +59,9 @@ const HeroSection = memo(({ heroImages, currentImageIndex, setCurrentImageIndex 
           </div>
           
           <div className="flex flex-wrap gap-4 opacity-0 animate-fade-in" style={{animationDelay: '0.6s'}}>
-            <Button 
-              size="lg" 
+            <CallButton 
               className="bg-accent hover:bg-accent/90 text-white px-8 py-6 text-lg shadow-2xl shadow-accent/30 hover:shadow-accent/50 transition-all hover:scale-105"
-              onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-            >
-              <Icon name="MessageSquare" size={20} className="mr-2" />
-              Заказать звонок
-            </Button>
+            />
             <Button 
               size="lg" 
               variant="outline"
