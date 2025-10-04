@@ -25,7 +25,8 @@ const PortfolioSection = memo(({ portfolio }: PortfolioSectionProps) => {
     coords: [project.coordinates.lat, project.coordinates.lng] as [number, number],
     title: project.title,
     description: project.description,
-    location: project.location
+    location: project.location,
+    image: project.image
   }));
 
   return (
