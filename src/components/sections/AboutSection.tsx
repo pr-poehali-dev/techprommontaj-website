@@ -53,7 +53,7 @@ const CounterAnimation = ({ target, suffix }: { target: number; suffix: string }
   }, []);
 
   return (
-    <div ref={counterRef} className="text-5xl md:text-6xl font-bold text-accent mb-2">
+    <div ref={counterRef} className="text-3xl sm:text-5xl md:text-6xl font-bold text-accent mb-2">
       {count}{suffix}
     </div>
   );
@@ -69,11 +69,11 @@ const AboutSection = ({ stats }: AboutSectionProps) => {
           Мы предоставляем работу вахтой по всей России и гарантируем профессиональное выполнение проектов.
         </p>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8 max-w-6xl mx-auto">
           {stats.map((stat, idx) => (
-            <div key={idx} className="text-center p-6 rounded-lg bg-gradient-to-br from-muted/30 to-white border border-muted hover:shadow-xl transition-all">
+            <div key={idx} className="text-center p-4 sm:p-6 rounded-lg bg-gradient-to-br from-muted/30 to-white border border-muted hover:shadow-xl transition-all">
               <CounterAnimation target={stat.value} suffix={stat.suffix} />
-              <p className="text-muted-foreground leading-relaxed">{stat.label}</p>
+              <p className="text-xs sm:text-base text-muted-foreground leading-relaxed">{stat.label}</p>
             </div>
           ))}
         </div>

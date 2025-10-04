@@ -36,6 +36,16 @@ const WorkflowSection = () => {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  useEffect(() => {
+    if (!isMobile) return;
+    
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % steps.length);
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, [isMobile, steps.length]);
+
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % steps.length);
   };

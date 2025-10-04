@@ -18,7 +18,7 @@ const Header = ({ isMenuOpen, setIsMenuOpen, smoothScroll }: HeaderProps) => {
                 <div className="bg-accent/20 p-1.5 rounded-full group-hover:bg-accent/30 transition-colors">
                   <Icon name="MapPin" size={14} className="text-accent" />
                 </div>
-                <span className="font-medium text-xs sm:text-sm">СПб и ЛО</span>
+                <span className="font-medium text-xs sm:text-sm">СПб и Ленобласть</span>
               </div>
               <div className="hidden md:flex items-center gap-2 group">
                 <div className="bg-white/10 p-1.5 rounded-full group-hover:bg-white/20 transition-colors">
@@ -27,9 +27,9 @@ const Header = ({ isMenuOpen, setIsMenuOpen, smoothScroll }: HeaderProps) => {
                 <span className="text-white/90">tehprommontaj@gmail.com</span>
               </div>
             </div>
-            <div className="hidden sm:flex items-center gap-2 text-white/90">
+            <div className="flex items-center gap-2 text-white/90">
               <Icon name="Clock" size={14} />
-              <span className="text-xs">Пн-Пт: 9:00-18:00</span>
+              <span className="text-xs">Пн-Пт: 9-18</span>
             </div>
           </div>
         </div>

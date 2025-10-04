@@ -24,6 +24,16 @@ const ServicesSection = memo(({ services }: ServicesSectionProps) => {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  useEffect(() => {
+    if (!isMobile) return;
+    
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % services.length);
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, [isMobile, services.length]);
+
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % services.length);
   };
