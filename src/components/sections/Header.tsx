@@ -18,7 +18,7 @@ const Header = ({ isMenuOpen, setIsMenuOpen, smoothScroll }: HeaderProps) => {
                 <div className="bg-accent/20 p-1.5 rounded-full group-hover:bg-accent/30 transition-colors">
                   <Icon name="MapPin" size={14} className="text-accent" />
                 </div>
-                <span className="font-medium text-xs sm:text-sm">СПб и Ленобласть</span>
+                <span className="font-medium text-xs sm:text-sm">По всей россии</span>
               </div>
               <div className="hidden md:flex items-center gap-2 group">
                 <div className="bg-white/10 p-1.5 rounded-full group-hover:bg-white/20 transition-colors">
