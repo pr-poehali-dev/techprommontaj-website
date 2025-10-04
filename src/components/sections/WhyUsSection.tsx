@@ -53,26 +53,32 @@ const WhyUsSection = memo(() => {
           {reasons.map((reason, idx) => (
             <div 
               key={idx} 
-              className="group relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border-2 border-transparent hover:border-accent overflow-hidden"
+              className="group relative"
             >
-              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-accent/10 to-primary/10 rounded-full -translate-y-16 translate-x-16 group-hover:scale-150 transition-transform duration-500"></div>
+              <div className="absolute inset-0 bg-gradient-to-br from-accent to-primary rounded-[2rem] opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"></div>
               
-              <div className="relative z-10">
-                <div className="bg-gradient-to-br from-accent to-accent/80 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-lg">
-                  <Icon name={reason.icon as any} size={32} className="text-white" />
+              <div className="relative bg-white rounded-[2rem] p-8 shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden">
+                <div className="absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-br from-accent/10 to-primary/10 rounded-full group-hover:scale-150 transition-transform duration-700"></div>
+                
+                <div className="absolute top-6 right-6 w-16 h-16 rounded-full bg-gradient-to-br from-accent/20 to-transparent flex items-center justify-center group-hover:rotate-180 transition-transform duration-700">
+                  <span className="text-2xl font-black text-accent/30">{String(idx + 1).padStart(2, '0')}</span>
                 </div>
                 
-                <h3 className="text-xl font-bold mb-3 text-primary group-hover:text-accent transition-colors">
-                  {reason.title}
-                </h3>
-                
-                <p className="text-muted-foreground leading-relaxed">
-                  {reason.description}
-                </p>
+                <div className="relative z-10 space-y-4">
+                  <div className="inline-block bg-gradient-to-br from-accent via-accent to-primary p-4 rounded-3xl group-hover:scale-110 group-hover:-rotate-12 transition-all duration-500 shadow-xl">
+                    <Icon name={reason.icon as any} size={32} className="text-white" />
+                  </div>
+                  
+                  <h3 className="text-xl font-bold text-primary group-hover:text-accent transition-colors min-h-[3.5rem] flex items-center">
+                    {reason.title}
+                  </h3>
+                  
+                  <p className="text-muted-foreground leading-relaxed text-sm">
+                    {reason.description}
+                  </p>
+                </div>
 
-                <div className="absolute bottom-4 right-4 text-6xl font-bold text-accent/5 group-hover:text-accent/10 transition-colors">
-                  {String(idx + 1).padStart(2, '0')}
-                </div>
+                <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-accent to-primary scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left rounded-full"></div>
               </div>
             </div>
           ))}
