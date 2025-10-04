@@ -73,6 +73,13 @@ const Index = () => {
       location: 'Владивосток',
       coordinates: { lat: 43.1155, lng: 131.8855 }
     },
+    { 
+      title: 'Нефтеперерабатывающий завод',
+      description: 'Реконструкция промышленных объектов',
+      image: '/img/041790ce-a9a1-4ca6-b0c0-df609b7c0e7b.jpg',
+      location: 'Казань',
+      coordinates: { lat: 55.7887, lng: 49.1221 }
+    },
   ];
 
   const handleSubmit = (e: React.FormEvent) => {

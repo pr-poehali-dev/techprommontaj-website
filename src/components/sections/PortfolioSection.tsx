@@ -1,6 +1,8 @@
-import { useState, memo } from 'react';
+import { useState, memo, lazy, Suspense } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import Icon from '@/components/ui/icon';
+
+const YandexMap = lazy(() => import('@/components/YandexMap'));
 
 interface Portfolio {
   title: string;
@@ -18,7 +20,13 @@ type ViewMode = 'list' | 'map';
 
 const PortfolioSection = memo(({ portfolio }: PortfolioSectionProps) => {
   const [viewMode, setViewMode] = useState<ViewMode>('list');
-  const [hoveredProject, setHoveredProject] = useState<number | null>(null);
+
+  const mapPoints = portfolio.map(project => ({
+    coords: [project.coordinates.lat, project.coordinates.lng] as [number, number],
+    title: project.title,
+    description: project.description,
+    location: project.location
+  }));
 
   return (
     <section id="portfolio" className="py-20 bg-white">
@@ -84,115 +92,16 @@ const PortfolioSection = memo(({ portfolio }: PortfolioSectionProps) => {
           </div>
         ) : (
           <div className="max-w-6xl mx-auto">
-            <div className="relative bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl overflow-hidden shadow-xl" style={{ height: '600px' }}>
-              <svg viewBox="0 0 1000 600" className="w-full h-full">
-                <defs>
-                  <filter id="glow">
-                    <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-                    <feMerge>
-                      <feMergeNode in="coloredBlur"/>
-                      <feMergeNode in="SourceGraphic"/>
-                    </feMerge>
-                  </filter>
-                </defs>
-                
-                <g className="map-of-russia">
-                  <path 
-                    d="M 100 300 Q 200 250 300 280 L 400 270 Q 500 260 600 250 L 700 240 Q 800 230 900 250 L 950 260 L 970 280 L 980 320 L 970 360 L 950 380 L 900 390 Q 800 400 700 380 L 600 370 Q 500 360 400 350 L 300 360 Q 200 370 150 340 Z"
-                    fill="#e2e8f0"
-                    stroke="#94a3b8"
-                    strokeWidth="2"
-                    className="transition-all duration-300"
-                  />
-                  
-                  <text x="500" y="320" textAnchor="middle" className="fill-slate-400 text-2xl font-light" style={{fontSize: '24px'}}>Россия</text>
-                </g>
-                
-                {portfolio.map((project, idx) => {
-                  const positions = [
-                    { x: 280, y: 300 },
-                    { x: 320, y: 280 },
-                    { x: 880, y: 270 }
-                  ];
-                  const pos = positions[idx] || { x: 500, y: 300 };
-                  const isHovered = hoveredProject === idx;
-                  
-                  return (
-                    <g 
-                      key={idx}
-                      onMouseEnter={() => setHoveredProject(idx)}
-                      onMouseLeave={() => setHoveredProject(null)}
-                      className="cursor-pointer"
-                      style={{ transition: 'all 0.3s ease' }}
-                    >
-                      <circle
-                        cx={pos.x}
-                        cy={pos.y}
-                        r={isHovered ? 16 : 12}
-                        fill="hsl(var(--primary))"
-                        filter={isHovered ? 'url(#glow)' : ''}
-                        className="transition-all duration-300"
-                      />
-                      <circle
-                        cx={pos.x}
-                        cy={pos.y}
-                        r={isHovered ? 24 : 20}
-                        fill="hsl(var(--primary))"
-                        opacity="0.2"
-                        className="transition-all duration-300 animate-pulse"
-                      />
-                      
-                      {isHovered && (
-                        <g>
-                          <rect
-                            x={pos.x - 120}
-                            y={pos.y - 140}
-                            width="240"
-                            height="120"
-                            rx="12"
-                            fill="white"
-                            stroke="hsl(var(--primary))"
-                            strokeWidth="2"
-                            filter="url(#glow)"
-                            className="animate-in fade-in zoom-in-95 duration-200"
-                          />
-                          <text 
-                            x={pos.x} 
-                            y={pos.y - 105} 
-                            textAnchor="middle" 
-                            className="fill-slate-900 font-bold"
-                            style={{fontSize: '16px'}}
-                          >
-                            {project.title}
-                          </text>
-                          <text 
-                            x={pos.x} 
-                            y={pos.y - 80} 
-                            textAnchor="middle" 
-                            className="fill-slate-600"
-                            style={{fontSize: '12px'}}
-                          >
-                            📍 {project.location}
-                          </text>
-                          <foreignObject x={pos.x - 110} y={pos.y - 68} width="220" height="50">
-                            <div className="text-xs text-slate-500 text-center px-2">
-                              {project.description}
-                            </div>
-                          </foreignObject>
-                        </g>
-                      )}
-                    </g>
-                  );
-                })}
-              </svg>
-              
-              <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm rounded-lg px-4 py-2 text-sm text-slate-600">
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-primary"></div>
-                  <span>Наведите на точку для подробностей</span>
+            <Suspense fallback={
+              <div className="w-full h-[600px] rounded-2xl bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center">
+                <div className="text-center">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+                  <p className="text-muted-foreground">Загрузка карты...</p>
                 </div>
               </div>
-            </div>
+            }>
+              <YandexMap points={mapPoints} />
+            </Suspense>
           </div>
         )}
       </div>
