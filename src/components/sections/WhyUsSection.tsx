@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo, useState, useEffect } from 'react';
 import Icon from '@/components/ui/icon';
 
 interface WhyUsItem {
@@ -8,6 +8,16 @@ interface WhyUsItem {
 }
 
 const WhyUsSection = memo(() => {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   const reasons: WhyUsItem[] = [
     {
       icon: 'Zap',
@@ -36,6 +46,24 @@ const WhyUsSection = memo(() => {
     }
   ];
 
+  useEffect(() => {
+    if (!isMobile) return;
+    
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % reasons.length);
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, [isMobile, reasons.length]);
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % reasons.length);
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + reasons.length) % reasons.length);
+  };
+
   return (
     <section className="py-20 bg-gradient-to-br from-white via-accent/5 to-primary/10 relative overflow-hidden">
       <div className="absolute inset-0 opacity-10">
@@ -49,7 +77,74 @@ const WhyUsSection = memo(() => {
           5 причин начать работать с нами уже сегодня
         </p>
 
-        <div className="max-w-6xl mx-auto grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {isMobile ? (
+          <div className="relative max-w-sm mx-auto mb-16">
+            <div className="overflow-hidden">
+              <div 
+                className="flex transition-transform duration-500 ease-out"
+                style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+              >
+                {reasons.map((reason, idx) => (
+                  <div key={idx} className="min-w-full px-2">
+                    <div className="group relative">
+                      <div className="absolute inset-0 bg-gradient-to-br from-accent to-primary rounded-[2rem] opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"></div>
+                      
+                      <div className="relative bg-white rounded-[2rem] p-8 shadow-lg transition-all duration-500 overflow-hidden h-full">
+                        <div className="absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-br from-accent/10 to-primary/10 rounded-full transition-transform duration-700"></div>
+                        
+                        <div className="absolute top-6 right-6 w-16 h-16 rounded-full bg-gradient-to-br from-accent/20 to-transparent flex items-center justify-center transition-transform duration-700">
+                          <span className="text-2xl font-black text-accent/30">{String(idx + 1).padStart(2, '0')}</span>
+                        </div>
+                        
+                        <div className="relative z-10 space-y-4">
+                          <div className="inline-block bg-gradient-to-br from-accent via-accent to-primary p-4 rounded-3xl transition-all duration-500 shadow-xl">
+                            <Icon name={reason.icon as any} size={32} className="text-white" />
+                          </div>
+                          
+                          <h3 className="text-xl font-bold text-primary transition-colors">
+                            {reason.title}
+                          </h3>
+                          
+                          <p className="text-muted-foreground leading-relaxed text-sm">
+                            {reason.description}
+                          </p>
+                        </div>
+
+                        <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-accent to-primary transition-transform duration-500 origin-left rounded-full"></div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <button
+              onClick={prevSlide}
+              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-white shadow-lg rounded-full p-2 hover:bg-accent hover:text-white transition-all z-10"
+            >
+              <Icon name="ChevronLeft" size={24} />
+            </button>
+            <button
+              onClick={nextSlide}
+              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-white shadow-lg rounded-full p-2 hover:bg-accent hover:text-white transition-all z-10"
+            >
+              <Icon name="ChevronRight" size={24} />
+            </button>
+
+            <div className="flex justify-center gap-2 mt-6">
+              {reasons.map((_, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setCurrentSlide(idx)}
+                  className={`h-2 rounded-full transition-all ${
+                    idx === currentSlide ? 'w-8 bg-accent' : 'w-2 bg-gray-300'
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className="max-w-6xl mx-auto grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {reasons.map((reason, idx) => (
             <div 
               key={idx} 
@@ -83,6 +178,7 @@ const WhyUsSection = memo(() => {
             </div>
           ))}
         </div>
+        )}
 
         <div className="mt-16 bg-gradient-to-r from-primary to-primary/80 rounded-3xl p-8 md:p-12 text-white shadow-2xl max-w-4xl mx-auto">
           <div className="flex flex-col md:flex-row items-center gap-6">
