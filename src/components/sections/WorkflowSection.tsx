@@ -9,23 +9,33 @@ const WorkflowSection = () => {
   const steps = [
     {
       number: 1,
-      title: 'Заявка',
-      description: 'Вы оставляете заявку по телефону или через форму на сайте'
+      title: 'Договор',
+      description: 'Мы подписываем договор о выполнении работ'
     },
     {
       number: 2,
-      title: 'Консультация',
-      description: 'Наш менеджер связывается с вами и обсуждает детали проекта'
+      title: 'Заявка',
+      description: 'Вы отправляете нам заявку на специалистов с указанием количества и требуемой квалификации'
     },
     {
       number: 3,
-      title: 'Выполнение',
-      description: 'Квалифицированная бригада приступает к работе на объекте'
+      title: 'Связь с руководителем',
+      description: 'Руководитель проекта связывается с вами и договаривается о дате и времени вывода специалистов на объект'
     },
     {
       number: 4,
-      title: 'Сдача объекта',
-      description: 'Проверка качества работ и официальная приёмка заказчиком'
+      title: 'Аттестация',
+      description: 'Вывод специалистов и прохождение ими аттестации (по требованию Заказчика)'
+    },
+    {
+      number: 5,
+      title: 'Начало работы',
+      description: 'После прохождения аттестации (если требуется) Заказчик допускает специалистов к работе и они приступают к выполнению своих обязанностей'
+    },
+    {
+      number: 6,
+      title: 'Оплата',
+      description: 'Далее каждый отчетный период производится оплата'
     }
   ];
 
@@ -64,7 +74,7 @@ const WorkflowSection = () => {
       <div className="container mx-auto px-4 relative z-10">
         <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">Как мы работаем</h2>
         <p className="text-center text-white/90 mb-16 max-w-2xl mx-auto text-lg">
-          Прозрачный процесс от заявки до сдачи объекта
+          Прозрачный процесс от договора до выполнения работ
         </p>
 
         {isMobile ? (
@@ -116,7 +126,7 @@ const WorkflowSection = () => {
             </div>
           </div>
         ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto mb-16">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto mb-16">
             {steps.map((step, idx) => (
               <div key={idx} className="relative">
                 <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-8 hover:bg-white/20 transition-all hover:scale-105 duration-300">

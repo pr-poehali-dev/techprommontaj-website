@@ -6,7 +6,7 @@ import AboutSection from '@/components/sections/AboutSection';
 
 const WorkflowSection = lazy(() => import('@/components/sections/WorkflowSection'));
 const ClientsSection = lazy(() => import('@/components/sections/ClientsSection'));
-const ServicesSection = lazy(() => import('@/components/sections/ServicesSection'));
+const WhyUsSection = lazy(() => import('@/components/sections/WhyUsSection'));
 const PortfolioSection = lazy(() => import('@/components/sections/PortfolioSection'));
 const FAQSection = lazy(() => import('@/components/sections/FAQSection'));
 const ContactSection = lazy(() => import('@/components/sections/ContactSection'));
@@ -53,33 +53,68 @@ const Index = () => {
 
   const portfolio = [
     { 
-      title: 'Промышленный комплекс №1',
-      description: 'Монтаж металлоконструкций, 15 000 м²',
+      title: 'Поселок Еруда, работа на ЗИФ 5 "Полюс Красноярск"',
+      description: 'Золотоизвлекательная фабрика',
       image: '/img/0be783f2-1c33-4215-8fe4-3402f15496d7.jpg',
-      location: 'Москва',
+      location: 'Поселок Еруда, Красноярский край',
+      coordinates: { lat: 63.6667, lng: 92.5833 }
+    },
+    { 
+      title: 'Внутриквартальные тепловые магистрали, металлоконструкции на «Приморской ГРЭС»',
+      description: 'Тепловые сети и металлоконструкции',
+      image: '/img/b633879c-adbb-465a-8a51-46c78671fc57.jpg',
+      location: 'Поселок Лучегорск, Приморский край',
+      coordinates: { lat: 46.4667, lng: 134.5 }
+    },
+    { 
+      title: 'УКПГ-1С Заполярного НГКМ',
+      description: 'Установка комплексной подготовки газа',
+      image: '/img/041790ce-a9a1-4ca6-b0c0-df609b7c0e7b.jpg',
+      location: 'Новый Уренгой, ЯНАО',
+      coordinates: { lat: 66.0833, lng: 76.6333 }
+    },
+    { 
+      title: 'Создание селекционно-племенного центра рыбоводства в Республике Карелия',
+      description: 'Рыбоводческий комплекс',
+      image: '/img/041790ce-a9a1-4ca6-b0c0-df609b7c0e7b.jpg',
+      location: 'Сосновец, Республика Карелия',
+      coordinates: { lat: 62.7833, lng: 34.3167 }
+    },
+    { 
+      title: 'Компрессорная станция Богандинская',
+      description: 'Газокомпрессорная станция',
+      image: '/img/4313046a-07a8-4d70-aa07-19d4a4ed66b6.jpg',
+      location: 'Тюмень, Тюменская область',
+      coordinates: { lat: 57.2667, lng: 65.5333 }
+    },
+    { 
+      title: 'Газовое месторождение Семаковское. УКПГ',
+      description: 'Установка комплексной подготовки газа',
+      image: '/img/6c795340-a5a3-405b-8f62-fb7ba76417ce.jpg',
+      location: 'Московская область',
       coordinates: { lat: 55.7558, lng: 37.6173 }
     },
     { 
-      title: 'Производственный цех',
-      description: 'Электромонтажные работы, автоматизация',
+      title: 'ЗИФ, участок гидрометаллургии ЗИФ АО "Полюс Алдан"',
+      description: 'Золотоизвлекательная фабрика',
+      image: '/img/0be783f2-1c33-4215-8fe4-3402f15496d7.jpg',
+      location: 'Поселок Куранах, Республика Саха (Якутия)',
+      coordinates: { lat: 58.7, lng: 125.5 }
+    },
+    { 
+      title: 'КГМК',
+      description: 'Кольская горно-металлургическая компания',
       image: '/img/b633879c-adbb-465a-8a51-46c78671fc57.jpg',
+      location: 'г. Заполярный, Мурманская область',
+      coordinates: { lat: 69.4167, lng: 30.8167 }
+    },
+    { 
+      title: 'Монтаж рыбофабрики, подведение систем, трубопроводов к механизмам',
+      description: 'Рыбоперерабатывающий комплекс',
+      image: '/img/041790ce-a9a1-4ca6-b0c0-df609b7c0e7b.jpg',
       location: 'Санкт-Петербург',
       coordinates: { lat: 59.9343, lng: 30.3351 }
-    },
-    { 
-      title: 'Портовый комплекс',
-      description: 'Комплексное строительство под ключ',
-      image: '/img/041790ce-a9a1-4ca6-b0c0-df609b7c0e7b.jpg',
-      location: 'Владивосток',
-      coordinates: { lat: 43.1155, lng: 131.8855 }
-    },
-    { 
-      title: 'Нефтеперерабатывающий завод',
-      description: 'Реконструкция промышленных объектов',
-      image: '/img/041790ce-a9a1-4ca6-b0c0-df609b7c0e7b.jpg',
-      location: 'Казань',
-      coordinates: { lat: 55.7887, lng: 49.1221 }
-    },
+    }
   ];
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -137,8 +172,8 @@ const Index = () => {
         <ClientsSection clients={clients} />
       </Suspense>
 
-      <Suspense fallback={<div className="py-20 bg-gradient-to-b from-white to-muted/20"></div>}>
-        <ServicesSection services={services} />
+      <Suspense fallback={<div className="py-20 bg-gradient-to-b from-white to-muted/30"></div>}>
+        <WhyUsSection />
       </Suspense>
 
       <Suspense fallback={<div className="py-20 bg-gradient-to-br from-primary to-primary/90"></div>}>
