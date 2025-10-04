@@ -18,7 +18,7 @@ const Header = ({ isMenuOpen, setIsMenuOpen, smoothScroll }: HeaderProps) => {
                 <div className="bg-accent/20 p-1.5 rounded-full group-hover:bg-accent/30 transition-colors">
                   <Icon name="MapPin" size={14} className="text-accent" />
                 </div>
-                <span className="font-medium">СПб и Ленобласть</span>
+                <span className="font-medium text-xs sm:text-sm">СПб и ЛО</span>
               </div>
               <div className="hidden md:flex items-center gap-2 group">
                 <div className="bg-white/10 p-1.5 rounded-full group-hover:bg-white/20 transition-colors">
@@ -43,9 +43,24 @@ const Header = ({ isMenuOpen, setIsMenuOpen, smoothScroll }: HeaderProps) => {
                 <Icon name="Building2" size={24} className="text-white" />
               </div>
               <div>
-                <h1 className="text-xl md:text-2xl font-bold text-primary leading-tight tracking-tight">ТЕХПРОММОНТАЖ</h1>
+                <h1 className="text-base sm:text-xl md:text-2xl font-bold text-primary leading-tight tracking-tight">ТЕХПРОММОНТАЖ</h1>
                 <p className="text-xs text-muted-foreground hidden sm:block">Подрядная организация</p>
               </div>
+            </div>
+            
+            <div className="flex lg:hidden items-center gap-2">
+              <a 
+                href="tel:+79006312247"
+                className="bg-gradient-to-r from-green-600 to-green-700 text-white p-3 rounded-lg shadow-lg hover:shadow-xl transition-all"
+              >
+                <Icon name="Phone" size={20} />
+              </a>
+              <button 
+                className="text-primary bg-primary/5 p-3 rounded-lg hover:bg-primary/10 transition-colors"
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+              >
+                <Icon name={isMenuOpen ? "X" : "Menu"} size={24} />
+              </button>
             </div>
             
             <div className="hidden lg:flex items-center gap-1">
@@ -65,13 +80,6 @@ const Header = ({ isMenuOpen, setIsMenuOpen, smoothScroll }: HeaderProps) => {
                 </Button>
               </div>
             </div>
-
-            <button 
-              className="lg:hidden text-primary bg-primary/5 p-2 rounded-lg hover:bg-primary/10 transition-colors"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-            >
-              <Icon name={isMenuOpen ? "X" : "Menu"} size={24} />
-            </button>
           </nav>
 
           {isMenuOpen && (

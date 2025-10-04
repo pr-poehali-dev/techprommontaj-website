@@ -29,10 +29,10 @@ const HeroSection = memo(({ heroImages, currentImageIndex, setCurrentImageIndex 
       <div className="container mx-auto px-4 relative z-10 py-20">
         <div className="max-w-4xl">
           <div className="opacity-0 animate-fade-in" style={{animationDelay: '0.2s'}}>
-            <h2 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+            <h2 className="text-3xl sm:text-5xl md:text-7xl font-bold mb-6 leading-tight">
               ТЕХПРОММОНТАЖ
             </h2>
-            <p className="text-2xl md:text-3xl mb-8 text-white/95 font-medium">
+            <p className="text-lg sm:text-2xl md:text-3xl mb-8 text-white/95 font-medium">
               Надёжный партнёр в промышленном строительстве
             </p>
           </div>
