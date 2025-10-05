@@ -1,7 +1,8 @@
-import { memo, useCallback } from 'react';
+import { memo, useCallback, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import Icon from '@/components/ui/icon';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+import ContactModal from '@/components/ui/ContactModal';
 
 interface Client {
   name: string;
@@ -45,8 +46,10 @@ const ClientCard = memo(({ client, index }: { client: Client; index: number }) =
 ClientCard.displayName = 'ClientCard';
 
 const ClientsSection = memo(({ clients }: ClientsSectionProps) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  
   const handleContactClick = useCallback(() => {
-    document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+    setIsModalOpen(true);
   }, []);
 
   return (
@@ -90,6 +93,12 @@ const ClientsSection = memo(({ clients }: ClientsSectionProps) => {
             <Icon name="Handshake" size={20} className="mr-2" />
             Стать партнёром
           </Button>
+          <ContactModal 
+            open={isModalOpen} 
+            onOpenChange={setIsModalOpen}
+            title="Стать партнёром"
+            description="Расскажите о вашей компании и мы обсудим условия сотрудничества"
+          />
         </div>
       </div>
     </section>

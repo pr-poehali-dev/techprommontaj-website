@@ -8,9 +8,10 @@ interface CallButtonProps {
   variant?: 'default' | 'outline' | 'ghost';
   size?: 'default' | 'sm' | 'lg';
   children?: React.ReactNode;
+  forceModal?: boolean;
 }
 
-const CallButton = ({ className, variant = 'default', size = 'lg', children }: CallButtonProps) => {
+const CallButton = ({ className, variant = 'default', size = 'lg', children, forceModal = false }: CallButtonProps) => {
   const [isMobile, setIsMobile] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const phoneNumber = '+79006312247';
@@ -31,7 +32,9 @@ const CallButton = ({ className, variant = 'default', size = 'lg', children }: C
   }, []);
 
   const handleClick = () => {
-    if (isMobile) {
+    if (forceModal) {
+      setIsModalOpen(true);
+    } else if (isMobile) {
       window.location.href = `tel:${phoneNumber}`;
     } else {
       setIsModalOpen(true);
@@ -46,8 +49,8 @@ const CallButton = ({ className, variant = 'default', size = 'lg', children }: C
         className={className}
         onClick={handleClick}
       >
-        <Icon name={isMobile ? 'Phone' : 'MessageSquare'} size={20} className="mr-2" />
-        {children || (isMobile ? 'Позвонить' : 'Заказать звонок')}
+        <Icon name={forceModal || !isMobile ? 'MessageSquare' : 'Phone'} size={20} className="mr-2" />
+        {children || (forceModal || !isMobile ? 'Заказать звонок' : 'Позвонить')}
       </Button>
       <ContactModal 
         open={isModalOpen} 

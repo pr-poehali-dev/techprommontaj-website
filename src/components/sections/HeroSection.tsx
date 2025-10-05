@@ -100,6 +100,7 @@ const HeroSection = memo(({ heroImages, currentImageIndex, setCurrentImageIndex 
           
           <div className="flex flex-wrap gap-4 opacity-0 animate-fade-in" style={{animationDelay: '0.6s'}}>
             <CallButton 
+              forceModal={true}
               className="bg-accent hover:bg-accent/90 text-white px-8 py-6 text-lg shadow-2xl shadow-accent/30 hover:shadow-accent/50 transition-all hover:scale-105"
             />
             <Button 
