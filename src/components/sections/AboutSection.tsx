@@ -17,8 +17,6 @@ const CounterAnimation = ({ target, suffix }: { target: number; suffix: string }
   const animationRef = useRef<number | null>(null);
 
   useEffect(() => {
-    if (hasAnimated) return;
-
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && !hasAnimated) {
@@ -46,16 +44,17 @@ const CounterAnimation = ({ target, suffix }: { target: number; suffix: string }
           animationRef.current = requestAnimationFrame(animate);
         }
       },
-      { threshold: 0.2, rootMargin: '0px 0px -50px 0px' }
+      { threshold: 0.1, rootMargin: '0px' }
     );
 
-    if (counterRef.current) {
-      observer.observe(counterRef.current);
+    const currentRef = counterRef.current;
+    if (currentRef) {
+      observer.observe(currentRef);
     }
 
     return () => {
-      if (counterRef.current) {
-        observer.unobserve(counterRef.current);
+      if (currentRef) {
+        observer.unobserve(currentRef);
       }
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
