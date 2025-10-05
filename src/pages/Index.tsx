@@ -69,7 +69,7 @@ const Index = () => {
     { 
       title: 'УКПГ-1С Заполярного НГКМ',
       description: 'Установка комплексной подготовки газа',
-      image: '/img/b30e56cd-4a5a-42cd-8226-20218c2eea72.jpg',
+      image: '/img/c94882c0-a312-4fed-a41d-51fd7e6da2a4.jpg',
       location: 'Новый Уренгой, ЯНАО',
       coordinates: { lat: 66.0833, lng: 76.6333 }
     },
@@ -97,7 +97,7 @@ const Index = () => {
     { 
       title: 'ЗИФ, участок гидрометаллургии ЗИФ АО "Полюс Алдан"',
       description: 'Золотоизвлекательная фабрика',
-      image: '/img/5ed87913-d0d3-4088-b4c8-8d689546e07b.jpg',
+      image: '/img/a7793711-2152-42ef-8bf6-ef336b1fa893.jpg',
       location: 'Поселок Куранах, Республика Саха (Якутия)',
       coordinates: { lat: 58.7, lng: 125.5 }
     },
@@ -111,7 +111,7 @@ const Index = () => {
     { 
       title: 'Монтаж рыбофабрики, подведение систем, трубопроводов к механизмам',
       description: 'Рыбоперерабатывающий комплекс',
-      image: '/img/bf8a7208-b678-4aeb-9734-6b72f6e5add8.jpg',
+      image: '/img/14e5c227-192e-4a02-9f28-452f94c1cfee.jpg',
       location: 'Санкт-Петербург',
       coordinates: { lat: 59.9343, lng: 30.3351 }
     }
