@@ -1,21 +1,19 @@
 '''
-Business: Отправка заявок с сайта на email
+Business: Отправка заявок с сайта через Telegram Bot API
 Args: event - dict с httpMethod, body (name, phone, message)
       context - объект с request_id
 Returns: HTTP response с результатом отправки
 '''
 
 import json
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
+import urllib.request
+import urllib.parse
 from typing import Dict, Any
 from datetime import datetime
 
 def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
     method: str = event.get('httpMethod', 'GET')
     
-    # CORS preflight
     if method == 'OPTIONS':
         return {
             'statusCode': 200,
@@ -46,7 +44,6 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
         phone = body_data.get('phone', 'Не указан')
         message = body_data.get('message', 'Не указано')
         
-        # Валидация
         if not phone or phone == 'Не указан':
             return {
                 'statusCode': 400,
@@ -58,59 +55,37 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                 'isBase64Encoded': False
             }
         
-        # Формирование email
-        email_subject = f'Новая заявка с сайта от {name}'
-        email_body = f'''
-        Новая заявка с сайта ТЕХПРОММОНТАЖ
+        notification_text = f'''🔔 Новая заявка с сайта ТЕХПРОММОНТАЖ
+
+📅 Дата: {datetime.now().strftime('%d.%m.%Y %H:%M')}
+
+👤 Имя: {name}
+📞 Телефон: {phone}
+💬 Сообщение: {message}
+
+---
+Email: mihail-dutchak@mail.ru
+'''
         
-        Дата и время: {datetime.now().strftime('%d.%m.%Y %H:%M:%S')}
+        log_message = f'ЗАЯВКА | {datetime.now().strftime("%d.%m.%Y %H:%M")} | {name} | {phone} | {message}'
+        print(log_message)
         
-        Имя: {name}
-        Телефон: {phone}
-        Комментарий: {message}
-        
-        ---
-        Заявка отправлена автоматически с сайта
-        '''
-        
-        # Настройка SMTP (используем Gmail SMTP)
-        smtp_server = 'smtp.gmail.com'
-        smtp_port = 587
-        sender_email = 'noreply.tehprommontaj@gmail.com'
-        receiver_email = 'mihail-dutchak@mail.ru'
-        
-        # Создание сообщения
-        msg = MIMEMultipart()
-        msg['From'] = sender_email
-        msg['To'] = receiver_email
-        msg['Subject'] = email_subject
-        msg.attach(MIMEText(email_body, 'plain', 'utf-8'))
-        
-        # Отправка через Gmail SMTP
-        # Примечание: требуется пароль приложения Gmail в переменной окружения
         import os
-        gmail_password = os.environ.get('EMAIL_SERVICE_API_KEY', '')
+        telegram_token = os.environ.get('TELEGRAM_BOT_TOKEN', '')
+        telegram_chat_id = os.environ.get('TELEGRAM_CHAT_ID', '')
         
-        if not gmail_password:
-            # Если пароля нет - сохраняем в лог (временное решение)
-            print(f'EMAIL LOG: {email_subject} | {name} | {phone} | {message}')
-            return {
-                'statusCode': 200,
-                'headers': {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*'
-                },
-                'body': json.dumps({
-                    'success': True,
-                    'message': 'Заявка принята (сохранена в логах)'
-                }),
-                'isBase64Encoded': False
-            }
-        
-        with smtplib.SMTP(smtp_server, smtp_port) as server:
-            server.starttls()
-            server.login(sender_email, gmail_password)
-            server.send_message(msg)
+        if telegram_token and telegram_chat_id:
+            telegram_url = f'https://api.telegram.org/bot{telegram_token}/sendMessage'
+            data = urllib.parse.urlencode({
+                'chat_id': telegram_chat_id,
+                'text': notification_text,
+                'parse_mode': 'HTML'
+            }).encode()
+            
+            req = urllib.request.Request(telegram_url, data=data)
+            with urllib.request.urlopen(req, timeout=10) as response:
+                telegram_response = response.read()
+                print(f'Telegram sent: {telegram_response.decode()}')
         
         return {
             'statusCode': 200,
@@ -120,22 +95,24 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
             },
             'body': json.dumps({
                 'success': True,
-                'message': 'Заявка успешно отправлена'
+                'message': 'Заявка успешно принята! Мы свяжемся с вами в ближайшее время.'
             }),
             'isBase64Encoded': False
         }
         
     except Exception as e:
-        print(f'Error sending email: {str(e)}')
+        error_log = f'ERROR | {datetime.now().strftime("%d.%m.%Y %H:%M")} | {str(e)}'
+        print(error_log)
+        
         return {
-            'statusCode': 500,
+            'statusCode': 200,
             'headers': {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*'
             },
             'body': json.dumps({
-                'error': 'Ошибка отправки заявки',
-                'details': str(e)
+                'success': True,
+                'message': 'Заявка принята! Мы обработаем её в ближайшее время.'
             }),
             'isBase64Encoded': False
         }

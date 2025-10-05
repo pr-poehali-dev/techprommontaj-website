@@ -55,63 +55,63 @@ const Index = () => {
     { 
       title: 'Поселок Еруда, работа на ЗИФ 5 "Полюс Красноярск"',
       description: 'Золотоизвлекательная фабрика',
-      image: '/img/fbc3e700-3de4-4cd8-af03-67812729d3b2.jpg',
+      image: '/img/5ed87913-d0d3-4088-b4c8-8d689546e07b.jpg',
       location: 'Поселок Еруда, Красноярский край',
       coordinates: { lat: 63.6667, lng: 92.5833 }
     },
     { 
       title: 'Внутриквартальные тепловые магистрали, металлоконструкции на «Приморской ГРЭС»',
       description: 'Тепловые сети и металлоконструкции',
-      image: '/img/eaa2300a-3d72-47c8-b702-c635c688caf2.jpg',
+      image: '/img/9d8226e8-09e0-4000-aff5-fb6df2113fa7.jpg',
       location: 'Поселок Лучегорск, Приморский край',
       coordinates: { lat: 46.4667, lng: 134.5 }
     },
     { 
       title: 'УКПГ-1С Заполярного НГКМ',
       description: 'Установка комплексной подготовки газа',
-      image: '/img/03bd7a22-49d2-4aae-a3e5-e0edc7a0480d.jpg',
+      image: '/img/b30e56cd-4a5a-42cd-8226-20218c2eea72.jpg',
       location: 'Новый Уренгой, ЯНАО',
       coordinates: { lat: 66.0833, lng: 76.6333 }
     },
     { 
       title: 'Создание селекционно-племенного центра рыбоводства в Республике Карелия',
       description: 'Рыбоводческий комплекс',
-      image: '/img/8d40456f-5c7f-48fe-9de1-027f4b46590f.jpg',
+      image: '/img/450b2165-87cf-4612-96f3-9c5a323481aa.jpg',
       location: 'Сосновец, Республика Карелия',
       coordinates: { lat: 62.7833, lng: 34.3167 }
     },
     { 
       title: 'Компрессорная станция Богандинская',
       description: 'Газокомпрессорная станция',
-      image: '/img/590d5b86-ebfd-4de5-a66b-710b1240ce9d.jpg',
+      image: '/img/b30e56cd-4a5a-42cd-8226-20218c2eea72.jpg',
       location: 'Тюмень, Тюменская область',
       coordinates: { lat: 57.2667, lng: 65.5333 }
     },
     { 
       title: 'Газовое месторождение Семаковское. УКПГ',
       description: 'Установка комплексной подготовки газа',
-      image: '/img/03bd7a22-49d2-4aae-a3e5-e0edc7a0480d.jpg',
+      image: '/img/6a274392-f77b-46c6-adf2-cfff4eb37f5a.jpg',
       location: 'Московская область',
       coordinates: { lat: 55.7558, lng: 37.6173 }
     },
     { 
       title: 'ЗИФ, участок гидрометаллургии ЗИФ АО "Полюс Алдан"',
       description: 'Золотоизвлекательная фабрика',
-      image: '/img/fbc3e700-3de4-4cd8-af03-67812729d3b2.jpg',
+      image: '/img/5ed87913-d0d3-4088-b4c8-8d689546e07b.jpg',
       location: 'Поселок Куранах, Республика Саха (Якутия)',
       coordinates: { lat: 58.7, lng: 125.5 }
     },
     { 
       title: 'КГМК',
       description: 'Кольская горно-металлургическая компания',
-      image: '/img/c02e179e-2ee8-48e9-b7c8-c56c7882c0f1.jpg',
+      image: '/img/0a74cba1-5812-4a81-aaf9-9cb5b66553b7.jpg',
       location: 'г. Заполярный, Мурманская область',
       coordinates: { lat: 69.4167, lng: 30.8167 }
     },
     { 
       title: 'Монтаж рыбофабрики, подведение систем, трубопроводов к механизмам',
       description: 'Рыбоперерабатывающий комплекс',
-      image: '/img/8d40456f-5c7f-48fe-9de1-027f4b46590f.jpg',
+      image: '/img/bf8a7208-b678-4aeb-9734-6b72f6e5add8.jpg',
       location: 'Санкт-Петербург',
       coordinates: { lat: 59.9343, lng: 30.3351 }
     }
