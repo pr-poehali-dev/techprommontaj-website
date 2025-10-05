@@ -11,55 +11,37 @@ interface HeroSectionProps {
 
 const HeroSection = memo(({ heroImages, currentImageIndex, setCurrentImageIndex }: HeroSectionProps) => {
   const touchStartX = useRef(0);
-  const touchEndX = useRef(0);
   const touchStartY = useRef(0);
-  const isSwiping = useRef(false);
   
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
     touchStartY.current = e.touches[0].clientY;
-    isSwiping.current = false;
   };
   
-  const handleTouchMove = (e: React.TouchEvent) => {
-    if (!touchStartX.current) return;
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    const touchEndX = e.changedTouches[0].clientX;
+    const touchEndY = e.changedTouches[0].clientY;
     
-    touchEndX.current = e.touches[0].clientX;
-    const diffX = Math.abs(touchStartX.current - touchEndX.current);
-    const diffY = Math.abs(touchStartY.current - e.touches[0].clientY);
+    const diffX = touchStartX.current - touchEndX;
+    const diffY = Math.abs(touchStartY.current - touchEndY);
     
-    if (diffX > diffY && diffX > 10) {
-      isSwiping.current = true;
-      e.preventDefault();
-    }
-  };
-  
-  const handleTouchEnd = () => {
-    if (!isSwiping.current) return;
-    
-    const diff = touchStartX.current - touchEndX.current;
-    const threshold = 50;
-    
-    if (Math.abs(diff) > threshold) {
-      if (diff > 0) {
+    // Свайп работает только если горизонтальное движение больше вертикального
+    if (Math.abs(diffX) > 50 && Math.abs(diffX) > diffY) {
+      if (diffX > 0) {
+        // Свайп влево - следующий слайд
         setCurrentImageIndex((currentImageIndex + 1) % heroImages.length);
       } else {
+        // Свайп вправо - предыдущий слайд
         setCurrentImageIndex((currentImageIndex - 1 + heroImages.length) % heroImages.length);
       }
     }
-    
-    touchStartX.current = 0;
-    touchEndX.current = 0;
-    isSwiping.current = false;
   };
   
   return (
     <section 
-      className="relative bg-gradient-to-br from-primary to-primary/80 text-white min-h-[90vh] flex items-center overflow-hidden touch-pan-y"
+      className="relative bg-gradient-to-br from-primary to-primary/80 text-white min-h-[90vh] flex items-center overflow-hidden"
       onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
-      style={{ touchAction: 'pan-y' }}
     >
       {heroImages.map((img, idx) => (
         <div 

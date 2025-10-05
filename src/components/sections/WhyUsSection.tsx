@@ -11,9 +11,7 @@ const WhyUsSection = memo(() => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
   const touchStartX = useRef(0);
-  const touchEndX = useRef(0);
   const touchStartY = useRef(0);
-  const isSwiping = useRef(false);
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -71,39 +69,25 @@ const WhyUsSection = memo(() => {
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
     touchStartY.current = e.touches[0].clientY;
-    isSwiping.current = false;
   };
   
-  const handleTouchMove = (e: React.TouchEvent) => {
-    if (!touchStartX.current) return;
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    const touchEndX = e.changedTouches[0].clientX;
+    const touchEndY = e.changedTouches[0].clientY;
     
-    touchEndX.current = e.touches[0].clientX;
-    const diffX = Math.abs(touchStartX.current - touchEndX.current);
-    const diffY = Math.abs(touchStartY.current - e.touches[0].clientY);
+    const diffX = touchStartX.current - touchEndX;
+    const diffY = Math.abs(touchStartY.current - touchEndY);
     
-    if (diffX > diffY && diffX > 10) {
-      isSwiping.current = true;
-      e.preventDefault();
-    }
-  };
-  
-  const handleTouchEnd = () => {
-    if (!isSwiping.current) return;
-    
-    const diff = touchStartX.current - touchEndX.current;
-    const threshold = 50;
-    
-    if (Math.abs(diff) > threshold) {
-      if (diff > 0) {
+    // Свайп работает только если горизонтальное движение больше вертикального
+    if (Math.abs(diffX) > 50 && Math.abs(diffX) > diffY) {
+      if (diffX > 0) {
+        // Свайп влево - следующий слайд
         nextSlide();
       } else {
+        // Свайп вправо - предыдущий слайд
         prevSlide();
       }
     }
-    
-    touchStartX.current = 0;
-    touchEndX.current = 0;
-    isSwiping.current = false;
   };
 
   return (
@@ -122,11 +106,9 @@ const WhyUsSection = memo(() => {
         {isMobile ? (
           <div className="relative max-w-sm mx-auto mb-16">
             <div 
-              className="overflow-hidden touch-pan-y"
+              className="overflow-hidden"
               onTouchStart={handleTouchStart}
-              onTouchMove={handleTouchMove}
               onTouchEnd={handleTouchEnd}
-              style={{ touchAction: 'pan-y' }}
             >
               <div 
                 className="flex transition-transform duration-500 ease-out"
