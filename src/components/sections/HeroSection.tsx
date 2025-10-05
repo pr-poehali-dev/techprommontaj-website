@@ -12,16 +12,31 @@ interface HeroSectionProps {
 const HeroSection = memo(({ heroImages, currentImageIndex, setCurrentImageIndex }: HeroSectionProps) => {
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
+  const touchStartY = useRef(0);
+  const isSwiping = useRef(false);
   
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
+    isSwiping.current = false;
   };
   
   const handleTouchMove = (e: React.TouchEvent) => {
+    if (!touchStartX.current) return;
+    
     touchEndX.current = e.touches[0].clientX;
+    const diffX = Math.abs(touchStartX.current - touchEndX.current);
+    const diffY = Math.abs(touchStartY.current - e.touches[0].clientY);
+    
+    if (diffX > diffY && diffX > 10) {
+      isSwiping.current = true;
+      e.preventDefault();
+    }
   };
   
   const handleTouchEnd = () => {
+    if (!isSwiping.current) return;
+    
     const diff = touchStartX.current - touchEndX.current;
     const threshold = 50;
     
@@ -32,14 +47,19 @@ const HeroSection = memo(({ heroImages, currentImageIndex, setCurrentImageIndex 
         setCurrentImageIndex((currentImageIndex - 1 + heroImages.length) % heroImages.length);
       }
     }
+    
+    touchStartX.current = 0;
+    touchEndX.current = 0;
+    isSwiping.current = false;
   };
   
   return (
     <section 
-      className="relative bg-gradient-to-br from-primary to-primary/80 text-white min-h-[90vh] flex items-center overflow-hidden"
+      className="relative bg-gradient-to-br from-primary to-primary/80 text-white min-h-[90vh] flex items-center overflow-hidden touch-pan-y"
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
+      style={{ touchAction: 'pan-y' }}
     >
       {heroImages.map((img, idx) => (
         <div 

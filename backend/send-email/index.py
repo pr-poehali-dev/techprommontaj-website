@@ -138,7 +138,7 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
         
         <div class="footer">
             <p style="margin: 5px 0;">Автоматическая система уведомлений</p>
-            <p style="margin: 5px 0;">ТЕХПРОММОНТАЖ © 2024</p>
+            <p style="margin: 5px 0;">ТЕХПРОММОНТАЖ © 2025</p>
         </div>
     </div>
 </body>
