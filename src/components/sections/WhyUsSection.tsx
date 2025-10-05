@@ -10,8 +10,10 @@ interface WhyUsItem {
 const WhyUsSection = memo(() => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
-  const touchStartX = useRef(0);
-  const touchStartY = useRef(0);
+  const touchStartX = useRef<number>(0);
+  const touchStartY = useRef<number>(0);
+  const touchEndX = useRef<number>(0);
+  const isDragging = useRef<boolean>(false);
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -69,25 +71,30 @@ const WhyUsSection = memo(() => {
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
     touchStartY.current = e.touches[0].clientY;
+    isDragging.current = true;
   };
   
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    const touchEndX = e.changedTouches[0].clientX;
-    const touchEndY = e.changedTouches[0].clientY;
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isDragging.current) return;
+    touchEndX.current = e.touches[0].clientX;
+  };
+  
+  const handleTouchEnd = () => {
+    if (!isDragging.current) return;
     
-    const diffX = touchStartX.current - touchEndX;
-    const diffY = Math.abs(touchStartY.current - touchEndY);
+    const diffX = touchStartX.current - touchEndX.current;
     
-    // Свайп работает только если горизонтальное движение больше вертикального
-    if (Math.abs(diffX) > 50 && Math.abs(diffX) > diffY) {
+    if (Math.abs(diffX) > 50) {
       if (diffX > 0) {
-        // Свайп влево - следующий слайд
         nextSlide();
       } else {
-        // Свайп вправо - предыдущий слайд
         prevSlide();
       }
     }
+    
+    isDragging.current = false;
+    touchStartX.current = 0;
+    touchEndX.current = 0;
   };
 
   return (
@@ -108,6 +115,7 @@ const WhyUsSection = memo(() => {
             <div 
               className="overflow-hidden"
               onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
               onTouchEnd={handleTouchEnd}
             >
               <div 
