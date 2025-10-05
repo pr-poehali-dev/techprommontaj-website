@@ -30,7 +30,7 @@ const Header = ({ isMenuOpen, setIsMenuOpen, smoothScroll }: HeaderProps) => {
             </div>
             <div className="flex items-center gap-2 text-white/90">
               <Icon name="Clock" size={14} />
-              <span className="text-xs">Пн-Пт: 9-20</span>
+              <span className="text-xs sm:text-sm">Понедельник-Пятница: 9:00-20:00</span>
             </div>
           </div>
         </div>

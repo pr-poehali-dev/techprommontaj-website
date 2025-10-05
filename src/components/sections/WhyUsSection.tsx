@@ -1,4 +1,4 @@
-import { memo, useState, useEffect } from 'react';
+import { memo, useState, useEffect, useRef } from 'react';
 import Icon from '@/components/ui/icon';
 
 interface WhyUsItem {
@@ -10,6 +10,8 @@ interface WhyUsItem {
 const WhyUsSection = memo(() => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -63,6 +65,27 @@ const WhyUsSection = memo(() => {
   const prevSlide = () => {
     setCurrentSlide((prev) => (prev - 1 + reasons.length) % reasons.length);
   };
+  
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+  
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.touches[0].clientX;
+  };
+  
+  const handleTouchEnd = () => {
+    const diff = touchStartX.current - touchEndX.current;
+    const threshold = 50;
+    
+    if (Math.abs(diff) > threshold) {
+      if (diff > 0) {
+        nextSlide();
+      } else {
+        prevSlide();
+      }
+    }
+  };
 
   return (
     <section className="py-20 bg-gradient-to-br from-white via-accent/5 to-primary/10 relative overflow-hidden">
@@ -79,7 +102,12 @@ const WhyUsSection = memo(() => {
 
         {isMobile ? (
           <div className="relative max-w-sm mx-auto mb-16">
-            <div className="overflow-hidden">
+            <div 
+              className="overflow-hidden"
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
+            >
               <div 
                 className="flex transition-transform duration-500 ease-out"
                 style={{ transform: `translateX(-${currentSlide * 100}%)` }}

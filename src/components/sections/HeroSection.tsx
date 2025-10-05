@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo, useRef, useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import Icon from '@/components/ui/icon';
 import CallButton from '@/components/ui/CallButton';
@@ -10,8 +10,37 @@ interface HeroSectionProps {
 }
 
 const HeroSection = memo(({ heroImages, currentImageIndex, setCurrentImageIndex }: HeroSectionProps) => {
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
+  
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+  
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.touches[0].clientX;
+  };
+  
+  const handleTouchEnd = () => {
+    const diff = touchStartX.current - touchEndX.current;
+    const threshold = 50;
+    
+    if (Math.abs(diff) > threshold) {
+      if (diff > 0) {
+        setCurrentImageIndex((currentImageIndex + 1) % heroImages.length);
+      } else {
+        setCurrentImageIndex((currentImageIndex - 1 + heroImages.length) % heroImages.length);
+      }
+    }
+  };
+  
   return (
-    <section className="relative bg-gradient-to-br from-primary to-primary/80 text-white min-h-[90vh] flex items-center overflow-hidden">
+    <section 
+      className="relative bg-gradient-to-br from-primary to-primary/80 text-white min-h-[90vh] flex items-center overflow-hidden"
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+    >
       {heroImages.map((img, idx) => (
         <div 
           key={idx}

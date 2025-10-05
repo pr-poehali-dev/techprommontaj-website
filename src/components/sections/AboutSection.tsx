@@ -14,6 +14,7 @@ const CounterAnimation = ({ target, suffix }: { target: number; suffix: string }
   const [count, setCount] = useState(0);
   const [hasAnimated, setHasAnimated] = useState(false);
   const counterRef = useRef<HTMLDivElement>(null);
+  const animationRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (hasAnimated) return;
@@ -22,23 +23,30 @@ const CounterAnimation = ({ target, suffix }: { target: number; suffix: string }
       (entries) => {
         if (entries[0].isIntersecting && !hasAnimated) {
           setHasAnimated(true);
+          
           const duration = 2000;
-          const steps = 60;
-          const increment = target / steps;
-          let current = 0;
-
-          const timer = setInterval(() => {
-            current += increment;
-            if (current >= target) {
-              setCount(target);
-              clearInterval(timer);
+          const startTime = performance.now();
+          
+          const animate = (currentTime: number) => {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            
+            const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+            const currentCount = Math.floor(easeOutQuart * target);
+            
+            setCount(currentCount);
+            
+            if (progress < 1) {
+              animationRef.current = requestAnimationFrame(animate);
             } else {
-              setCount(Math.floor(current));
+              setCount(target);
             }
-          }, duration / steps);
+          };
+          
+          animationRef.current = requestAnimationFrame(animate);
         }
       },
-      { threshold: 0.3 }
+      { threshold: 0.2, rootMargin: '0px 0px -50px 0px' }
     );
 
     if (counterRef.current) {
@@ -49,8 +57,11 @@ const CounterAnimation = ({ target, suffix }: { target: number; suffix: string }
       if (counterRef.current) {
         observer.unobserve(counterRef.current);
       }
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
     };
-  }, []);
+  }, [hasAnimated, target]);
 
   return (
     <div ref={counterRef} className="text-3xl sm:text-5xl md:text-6xl font-bold text-accent mb-2">
