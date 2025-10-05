@@ -60,13 +60,11 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
         log_message = f'ЗАЯВКА | {datetime.now().strftime("%d.%m.%Y %H:%M")} | {name} | {phone} | {message}'
         print(log_message)
         
-        smtp_host = os.environ.get('SMTP_HOST', '')
-        smtp_port = int(os.environ.get('SMTP_PORT', '587'))
-        smtp_user = os.environ.get('SMTP_USER', '')
-        smtp_password = os.environ.get('SMTP_PASSWORD', '')
+        gmail_user = os.environ.get('GMAIL_USER', 'Tehprommontaj@gmail.com')
+        gmail_password = os.environ.get('GMAIL_PASSWORD', '')
         
-        if not all([smtp_host, smtp_user, smtp_password]):
-            print('SMTP настройки не заполнены - заявка сохранена в логах')
+        if not gmail_password:
+            print('Gmail пароль не настроен - заявка сохранена в логах')
             return {
                 'statusCode': 200,
                 'headers': {
@@ -94,17 +92,17 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
 '''
         
         msg = MIMEMultipart()
-        msg['From'] = smtp_user
+        msg['From'] = gmail_user
         msg['To'] = 'mihail-dutchak@mail.ru'
         msg['Subject'] = email_subject
         msg.attach(MIMEText(email_body, 'plain', 'utf-8'))
         
-        with smtplib.SMTP(smtp_host, smtp_port, timeout=10) as server:
+        with smtplib.SMTP('smtp.gmail.com', 587, timeout=10) as server:
             server.starttls()
-            server.login(smtp_user, smtp_password)
+            server.login(gmail_user, gmail_password)
             server.send_message(msg)
         
-        print(f'Email успешно отправлен на mihail-dutchak@mail.ru')
+        print(f'Email успешно отправлен с {gmail_user} на mihail-dutchak@mail.ru')
         
         return {
             'statusCode': 200,
