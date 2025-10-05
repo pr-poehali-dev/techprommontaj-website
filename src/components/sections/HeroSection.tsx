@@ -10,47 +10,41 @@ interface HeroSectionProps {
 }
 
 const HeroSection = memo(({ heroImages, currentImageIndex, setCurrentImageIndex }: HeroSectionProps) => {
-  const touchStartX = useRef<number>(0);
-  const touchStartY = useRef<number>(0);
-  const touchEndX = useRef<number>(0);
-  const isDragging = useRef<boolean>(false);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
   
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX;
-    touchStartY.current = e.touches[0].clientY;
-    isDragging.current = true;
+  const minSwipeDistance = 50;
+  
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
   };
   
-  const handleTouchMove = (e: React.TouchEvent) => {
-    if (!isDragging.current) return;
-    touchEndX.current = e.touches[0].clientX;
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
   };
   
-  const handleTouchEnd = () => {
-    if (!isDragging.current) return;
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
     
-    const diffX = touchStartX.current - touchEndX.current;
-    const diffY = Math.abs(touchStartY.current - touchEndX.current);
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
     
-    if (Math.abs(diffX) > 50) {
-      if (diffX > 0) {
-        setCurrentImageIndex((currentImageIndex + 1) % heroImages.length);
-      } else {
-        setCurrentImageIndex((currentImageIndex - 1 + heroImages.length) % heroImages.length);
-      }
+    if (isLeftSwipe) {
+      setCurrentImageIndex((currentImageIndex + 1) % heroImages.length);
     }
-    
-    isDragging.current = false;
-    touchStartX.current = 0;
-    touchEndX.current = 0;
+    if (isRightSwipe) {
+      setCurrentImageIndex((currentImageIndex - 1 + heroImages.length) % heroImages.length);
+    }
   };
   
   return (
     <section 
       className="relative bg-gradient-to-br from-primary to-primary/80 text-white min-h-[90vh] flex items-center overflow-hidden"
-      onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchEnd}
     >
       {heroImages.map((img, idx) => (
         <div 

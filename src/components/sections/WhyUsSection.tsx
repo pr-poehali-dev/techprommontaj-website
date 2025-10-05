@@ -10,10 +10,8 @@ interface WhyUsItem {
 const WhyUsSection = memo(() => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
-  const touchStartX = useRef<number>(0);
-  const touchStartY = useRef<number>(0);
-  const touchEndX = useRef<number>(0);
-  const isDragging = useRef<boolean>(false);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -68,33 +66,30 @@ const WhyUsSection = memo(() => {
     setCurrentSlide((prev) => (prev - 1 + reasons.length) % reasons.length);
   };
   
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX;
-    touchStartY.current = e.touches[0].clientY;
-    isDragging.current = true;
+  const minSwipeDistance = 50;
+  
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
   };
   
-  const handleTouchMove = (e: React.TouchEvent) => {
-    if (!isDragging.current) return;
-    touchEndX.current = e.touches[0].clientX;
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
   };
   
-  const handleTouchEnd = () => {
-    if (!isDragging.current) return;
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
     
-    const diffX = touchStartX.current - touchEndX.current;
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
     
-    if (Math.abs(diffX) > 50) {
-      if (diffX > 0) {
-        nextSlide();
-      } else {
-        prevSlide();
-      }
+    if (isLeftSwipe) {
+      nextSlide();
     }
-    
-    isDragging.current = false;
-    touchStartX.current = 0;
-    touchEndX.current = 0;
+    if (isRightSwipe) {
+      prevSlide();
+    }
   };
 
   return (
@@ -114,9 +109,9 @@ const WhyUsSection = memo(() => {
           <div className="relative max-w-sm mx-auto mb-16">
             <div 
               className="overflow-hidden"
-              onTouchStart={handleTouchStart}
-              onTouchMove={handleTouchMove}
-              onTouchEnd={handleTouchEnd}
+              onTouchStart={onTouchStart}
+              onTouchMove={onTouchMove}
+              onTouchEnd={onTouchEnd}
             >
               <div 
                 className="flex transition-transform duration-500 ease-out"
