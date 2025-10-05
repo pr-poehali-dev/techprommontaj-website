@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import Icon from '@/components/ui/icon';
+import ContactModal from '@/components/ui/ContactModal';
 
 interface CallButtonProps {
   className?: string;
@@ -11,6 +12,7 @@ interface CallButtonProps {
 
 const CallButton = ({ className, variant = 'default', size = 'lg', children }: CallButtonProps) => {
   const [isMobile, setIsMobile] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const phoneNumber = '+79006312247';
 
   useEffect(() => {
@@ -32,20 +34,28 @@ const CallButton = ({ className, variant = 'default', size = 'lg', children }: C
     if (isMobile) {
       window.location.href = `tel:${phoneNumber}`;
     } else {
-      document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+      setIsModalOpen(true);
     }
   };
 
   return (
-    <Button 
-      size={size}
-      variant={variant}
-      className={className}
-      onClick={handleClick}
-    >
-      <Icon name={isMobile ? 'Phone' : 'MessageSquare'} size={20} className="mr-2" />
-      {children || (isMobile ? 'Позвонить' : 'Заказать звонок')}
-    </Button>
+    <>
+      <Button 
+        size={size}
+        variant={variant}
+        className={className}
+        onClick={handleClick}
+      >
+        <Icon name={isMobile ? 'Phone' : 'MessageSquare'} size={20} className="mr-2" />
+        {children || (isMobile ? 'Позвонить' : 'Заказать звонок')}
+      </Button>
+      <ContactModal 
+        open={isModalOpen} 
+        onOpenChange={setIsModalOpen}
+        title="Заказать звонок"
+        description="Оставьте свои контактные данные и мы перезвоним вам в течение 15 минут"
+      />
+    </>
   );
 };
 

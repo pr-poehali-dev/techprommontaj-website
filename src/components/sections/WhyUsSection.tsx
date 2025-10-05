@@ -1,4 +1,4 @@
-import { memo, useState, useEffect, useRef } from 'react';
+import { memo, useState, useEffect, useRef, useCallback } from 'react';
 import Icon from '@/components/ui/icon';
 
 interface WhyUsItem {
@@ -10,8 +10,9 @@ interface WhyUsItem {
 const WhyUsSection = memo(() => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
-  const [touchStart, setTouchStart] = useState<number | null>(null);
-  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  const touchStartXRef = useRef<number>(0);
+  const touchEndXRef = useRef<number>(0);
+  const sliderRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -66,31 +67,39 @@ const WhyUsSection = memo(() => {
     setCurrentSlide((prev) => (prev - 1 + reasons.length) % reasons.length);
   };
   
-  const minSwipeDistance = 50;
+  const handleTouchStart = useCallback((e: TouchEvent) => {
+    touchStartXRef.current = e.touches[0].clientX;
+  }, []);
   
-  const onTouchStart = (e: React.TouchEvent) => {
-    setTouchEnd(null);
-    setTouchStart(e.targetTouches[0].clientX);
-  };
+  const handleTouchMove = useCallback((e: TouchEvent) => {
+    touchEndXRef.current = e.touches[0].clientX;
+  }, []);
   
-  const onTouchMove = (e: React.TouchEvent) => {
-    setTouchEnd(e.targetTouches[0].clientX);
-  };
-  
-  const onTouchEnd = () => {
-    if (!touchStart || !touchEnd) return;
-    
-    const distance = touchStart - touchEnd;
-    const isLeftSwipe = distance > minSwipeDistance;
-    const isRightSwipe = distance < -minSwipeDistance;
-    
-    if (isLeftSwipe) {
-      nextSlide();
+  const handleTouchEnd = useCallback(() => {
+    const diff = touchStartXRef.current - touchEndXRef.current;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) {
+        setCurrentSlide((prev) => (prev + 1) % reasons.length);
+      } else {
+        setCurrentSlide((prev) => (prev - 1 + reasons.length) % reasons.length);
+      }
     }
-    if (isRightSwipe) {
-      prevSlide();
-    }
-  };
+  }, [reasons.length]);
+  
+  useEffect(() => {
+    if (!isMobile || !sliderRef.current) return;
+    
+    const slider = sliderRef.current;
+    slider.addEventListener('touchstart', handleTouchStart, { passive: true });
+    slider.addEventListener('touchmove', handleTouchMove, { passive: true });
+    slider.addEventListener('touchend', handleTouchEnd);
+    
+    return () => {
+      slider.removeEventListener('touchstart', handleTouchStart);
+      slider.removeEventListener('touchmove', handleTouchMove);
+      slider.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [isMobile, handleTouchStart, handleTouchMove, handleTouchEnd]);
 
   return (
     <section className="py-20 bg-gradient-to-br from-white via-accent/5 to-primary/10 relative overflow-hidden">
@@ -108,10 +117,8 @@ const WhyUsSection = memo(() => {
         {isMobile ? (
           <div className="relative max-w-sm mx-auto mb-16">
             <div 
+              ref={sliderRef}
               className="overflow-hidden"
-              onTouchStart={onTouchStart}
-              onTouchMove={onTouchMove}
-              onTouchEnd={onTouchEnd}
             >
               <div 
                 className="flex transition-transform duration-500 ease-out"

@@ -1,4 +1,4 @@
-import { memo, useRef, useState, useEffect } from 'react';
+import { memo, useRef, useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import Icon from '@/components/ui/icon';
 import CallButton from '@/components/ui/CallButton';
@@ -10,41 +10,47 @@ interface HeroSectionProps {
 }
 
 const HeroSection = memo(({ heroImages, currentImageIndex, setCurrentImageIndex }: HeroSectionProps) => {
-  const [touchStart, setTouchStart] = useState<number | null>(null);
-  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  const touchStartXRef = useRef<number>(0);
+  const touchEndXRef = useRef<number>(0);
   
-  const minSwipeDistance = 50;
+  const handleTouchStart = useCallback((e: TouchEvent) => {
+    touchStartXRef.current = e.touches[0].clientX;
+  }, []);
   
-  const onTouchStart = (e: React.TouchEvent) => {
-    setTouchEnd(null);
-    setTouchStart(e.targetTouches[0].clientX);
-  };
+  const handleTouchMove = useCallback((e: TouchEvent) => {
+    touchEndXRef.current = e.touches[0].clientX;
+  }, []);
   
-  const onTouchMove = (e: React.TouchEvent) => {
-    setTouchEnd(e.targetTouches[0].clientX);
-  };
-  
-  const onTouchEnd = () => {
-    if (!touchStart || !touchEnd) return;
-    
-    const distance = touchStart - touchEnd;
-    const isLeftSwipe = distance > minSwipeDistance;
-    const isRightSwipe = distance < -minSwipeDistance;
-    
-    if (isLeftSwipe) {
-      setCurrentImageIndex((currentImageIndex + 1) % heroImages.length);
+  const handleTouchEnd = useCallback(() => {
+    const diff = touchStartXRef.current - touchEndXRef.current;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) {
+        setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
+      } else {
+        setCurrentImageIndex((prev) => (prev - 1 + heroImages.length) % heroImages.length);
+      }
     }
-    if (isRightSwipe) {
-      setCurrentImageIndex((currentImageIndex - 1 + heroImages.length) % heroImages.length);
-    }
-  };
+  }, [heroImages.length, setCurrentImageIndex]);
+  
+  useEffect(() => {
+    const section = document.querySelector('section');
+    if (!section) return;
+    
+    section.addEventListener('touchstart', handleTouchStart, { passive: true });
+    section.addEventListener('touchmove', handleTouchMove, { passive: true });
+    section.addEventListener('touchend', handleTouchEnd);
+    
+    return () => {
+      section.removeEventListener('touchstart', handleTouchStart);
+      section.removeEventListener('touchmove', handleTouchMove);
+      section.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [handleTouchStart, handleTouchMove, handleTouchEnd]);
   
   return (
     <section 
       className="relative bg-gradient-to-br from-primary to-primary/80 text-white min-h-[90vh] flex items-center overflow-hidden"
-      onTouchStart={onTouchStart}
-      onTouchMove={onTouchMove}
-      onTouchEnd={onTouchEnd}
+      id="hero-section"
     >
       {heroImages.map((img, idx) => (
         <div 

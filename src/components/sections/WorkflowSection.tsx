@@ -1,10 +1,12 @@
 import { Button } from '@/components/ui/button';
 import { useState, useEffect } from 'react';
 import Icon from '@/components/ui/icon';
+import ContactModal from '@/components/ui/ContactModal';
 
 const WorkflowSection = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const steps = [
     {
@@ -150,10 +152,16 @@ const WorkflowSection = () => {
           <Button 
             size="lg" 
             className="bg-accent hover:bg-accent/90 text-white px-8 py-6 text-lg"
-            onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+            onClick={() => setIsModalOpen(true)}
           >
             Начать сотрудничество
           </Button>
+          <ContactModal 
+            open={isModalOpen} 
+            onOpenChange={setIsModalOpen}
+            title="Начать сотрудничество"
+            description="Расскажите о вашем проекте и мы свяжемся с вами для обсуждения деталей"
+          />
         </div>
       </div>
     </section>
