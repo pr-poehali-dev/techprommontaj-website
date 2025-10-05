@@ -12,55 +12,46 @@ interface AboutSectionProps {
 
 const CounterAnimation = ({ target, suffix }: { target: number; suffix: string }) => {
   const [count, setCount] = useState(0);
-  const [hasAnimated, setHasAnimated] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
   const counterRef = useRef<HTMLDivElement>(null);
-  const animationRef = useRef<number | null>(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && !hasAnimated) {
-          setHasAnimated(true);
-          
-          const duration = 2000;
-          const startTime = performance.now();
-          
-          const animate = (currentTime: number) => {
-            const elapsed = currentTime - startTime;
-            const progress = Math.min(elapsed / duration, 1);
-            
-            const easeOutQuart = 1 - Math.pow(1 - progress, 4);
-            const currentCount = Math.floor(easeOutQuart * target);
-            
-            setCount(currentCount);
-            
-            if (progress < 1) {
-              animationRef.current = requestAnimationFrame(animate);
-            } else {
-              setCount(target);
-            }
-          };
-          
-          animationRef.current = requestAnimationFrame(animate);
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
         }
       },
-      { threshold: 0.1, rootMargin: '0px' }
+      { threshold: 0.1 }
     );
 
-    const currentRef = counterRef.current;
-    if (currentRef) {
-      observer.observe(currentRef);
+    if (counterRef.current) {
+      observer.observe(counterRef.current);
     }
 
-    return () => {
-      if (currentRef) {
-        observer.unobserve(currentRef);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!isVisible) return;
+
+    let frame = 0;
+    const totalFrames = 60;
+    const increment = target / totalFrames;
+
+    const counter = setInterval(() => {
+      frame++;
+      if (frame === totalFrames) {
+        setCount(target);
+        clearInterval(counter);
+      } else {
+        setCount(Math.floor(frame * increment));
       }
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
-    };
-  }, [hasAnimated, target]);
+    }, 30);
+
+    return () => clearInterval(counter);
+  }, [isVisible, target]);
 
   return (
     <div ref={counterRef} className="text-3xl sm:text-5xl md:text-6xl font-bold text-accent mb-2">
