@@ -13,7 +13,10 @@ interface Vacancy {
 }
 
 const VacanciesSection = () => {
-  const [vacancies, setVacancies] = useState<Vacancy[]>([]);
+  const [allVacancies, setAllVacancies] = useState<Vacancy[]>([]);
+  const [cities, setCities] = useState<string[]>([]);
+  const [vacanciesByCity, setVacanciesByCity] = useState<Record<string, Vacancy[]>>({});
+  const [selectedCity, setSelectedCity] = useState<string>('Санкт-Петербург');
   const [loading, setLoading] = useState(true);
   const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -24,7 +27,9 @@ const VacanciesSection = () => {
         const data = await response.json();
         
         if (response.ok) {
-          setVacancies(data.vacancies || []);
+          setAllVacancies(data.vacancies || []);
+          setCities(data.cities || []);
+          setVacanciesByCity(data.vacanciesByCity || {});
         }
       } catch (err) {
         console.error('Ошибка загрузки вакансий:', err);
@@ -36,13 +41,19 @@ const VacanciesSection = () => {
     fetchVacancies();
   }, []);
 
+  const displayedVacancies = vacanciesByCity[selectedCity] || [];
+
   const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % Math.min(vacancies.length, 9));
+    setCurrentSlide((prev) => (prev + 1) % displayedVacancies.length);
   };
 
   const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + Math.min(vacancies.length, 9)) % Math.min(vacancies.length, 9));
+    setCurrentSlide((prev) => (prev - 1 + displayedVacancies.length) % displayedVacancies.length);
   };
+
+  useEffect(() => {
+    setCurrentSlide(0);
+  }, [selectedCity]);
 
   return (
     <section id="vacancies" className="relative py-20 bg-gradient-to-br from-primary via-primary/95 to-accent overflow-hidden">
@@ -62,6 +73,32 @@ const VacanciesSection = () => {
           </p>
         </div>
 
+        {!loading && cities.length > 0 && (
+          <div className="mb-8">
+            <div className="flex justify-center mb-4">
+              <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full">
+                <Icon name="MapPin" className="text-white" size={18} />
+                <span className="text-white/90 text-sm font-medium">Выберите город:</span>
+              </div>
+            </div>
+            <div className="flex flex-wrap justify-center gap-2 max-w-4xl mx-auto">
+              {cities.map((city) => (
+                <button
+                  key={city}
+                  onClick={() => setSelectedCity(city)}
+                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                    selectedCity === city
+                      ? 'bg-white text-primary shadow-lg scale-105'
+                      : 'bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm'
+                  }`}
+                >
+                  {city} ({vacanciesByCity[city]?.length || 0})
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
         {loading ? (
           <div className="text-center py-12">
             <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-white/20 border-t-white"></div>
@@ -75,7 +112,7 @@ const VacanciesSection = () => {
                   className="flex transition-transform duration-300 ease-out"
                   style={{ transform: `translateX(-${currentSlide * 100}%)` }}
                 >
-                  {vacancies.slice(0, 9).map((vacancy) => (
+                  {displayedVacancies.map((vacancy) => (
                     <div
                       key={vacancy.id}
                       className="w-full flex-shrink-0 px-4"
@@ -118,7 +155,7 @@ const VacanciesSection = () => {
                 </div>
               </div>
 
-              {vacancies.length > 0 && (
+              {displayedVacancies.length > 0 && (
                 <>
                   <button
                     onClick={prevSlide}
@@ -136,7 +173,7 @@ const VacanciesSection = () => {
                   </button>
 
                   <div className="flex justify-center gap-2 mt-6">
-                    {vacancies.slice(0, 9).map((_, index) => (
+                    {displayedVacancies.map((_, index) => (
                       <button
                         key={index}
                         onClick={() => setCurrentSlide(index)}
@@ -152,7 +189,7 @@ const VacanciesSection = () => {
             </div>
 
             <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-              {vacancies.slice(0, 9).map((vacancy) => (
+              {displayedVacancies.slice(0, 9).map((vacancy) => (
                 <div
                   key={vacancy.id}
                   className="group bg-white/95 backdrop-blur-sm rounded-2xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-white/20"
@@ -192,7 +229,7 @@ const VacanciesSection = () => {
               ))}
             </div>
 
-            {vacancies.length === 0 && (
+            {displayedVacancies.length === 0 && (
               <div className="text-center py-12">
                 <Icon name="Search" className="text-white/50 mx-auto mb-4" size={48} />
                 <p className="text-white text-lg">Нет доступных вакансий</p>

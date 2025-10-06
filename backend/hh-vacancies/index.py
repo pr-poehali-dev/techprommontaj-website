@@ -38,7 +38,7 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
     employer_id = '12178128'
     
     try:
-        api_url = f'https://api.hh.ru/vacancies?employer_id={employer_id}&area=2&per_page=20'
+        api_url = f'https://api.hh.ru/vacancies?employer_id={employer_id}&per_page=100'
         
         req = urllib.request.Request(
             api_url,
@@ -49,6 +49,7 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
             data = json.loads(response.read().decode('utf-8'))
         
         vacancies: List[Dict[str, Any]] = []
+        cities_map: Dict[str, List[Dict[str, Any]]] = {}
         
         for item in data.get('items', []):
             salary_info = item.get('salary')
@@ -80,6 +81,12 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
             }
             
             vacancies.append(vacancy)
+            
+            if area_name not in cities_map:
+                cities_map[area_name] = []
+            cities_map[area_name].append(vacancy)
+        
+        cities = list(cities_map.keys())
         
         return {
             'statusCode': 200,
@@ -90,6 +97,8 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
             'isBase64Encoded': False,
             'body': json.dumps({
                 'vacancies': vacancies,
+                'cities': cities,
+                'vacanciesByCity': cities_map,
                 'total': len(vacancies)
             }, ensure_ascii=False)
         }
