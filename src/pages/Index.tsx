@@ -8,6 +8,7 @@ const WorkflowSection = lazy(() => import('@/components/sections/WorkflowSection
 const ClientsSection = lazy(() => import('@/components/sections/ClientsSection'));
 const WhyUsSection = lazy(() => import('@/components/sections/WhyUsSection'));
 const PortfolioSection = lazy(() => import('@/components/sections/PortfolioSection'));
+const VacanciesSection = lazy(() => import('@/components/sections/VacanciesSection'));
 const FAQSection = lazy(() => import('@/components/sections/FAQSection'));
 const ContactSection = lazy(() => import('@/components/sections/ContactSection'));
 const Footer = lazy(() => import('@/components/sections/Footer'));
@@ -209,6 +210,10 @@ const Index = () => {
 
       <Suspense fallback={<div className="py-20 bg-white"></div>}>
         <PortfolioSection portfolio={portfolio} />
+      </Suspense>
+
+      <Suspense fallback={<div className="py-20 bg-gradient-to-br from-primary to-accent"></div>}>
+        <VacanciesSection />
       </Suspense>
 
       <Suspense fallback={<div className="py-20 bg-gradient-to-b from-muted/20 to-white"></div>}>
