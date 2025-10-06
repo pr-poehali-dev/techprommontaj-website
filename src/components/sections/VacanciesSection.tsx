@@ -19,6 +19,7 @@ const VacanciesSection = () => {
   const [selectedCity, setSelectedCity] = useState<string>('Санкт-Петербург');
   const [loading, setLoading] = useState(true);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   useEffect(() => {
     const fetchVacancies = async () => {
@@ -74,27 +75,56 @@ const VacanciesSection = () => {
         </div>
 
         {!loading && cities.length > 0 && (
-          <div className="mb-8">
-            <div className="flex justify-center mb-4">
-              <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full">
-                <Icon name="MapPin" className="text-white" size={18} />
-                <span className="text-white/90 text-sm font-medium">Выберите город:</span>
-              </div>
-            </div>
-            <div className="flex flex-wrap justify-center gap-2 max-w-4xl mx-auto">
-              {cities.map((city) => (
-                <button
-                  key={city}
-                  onClick={() => setSelectedCity(city)}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                    selectedCity === city
-                      ? 'bg-white text-primary shadow-lg scale-105'
-                      : 'bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm'
-                  }`}
-                >
-                  {city} ({vacanciesByCity[city]?.length || 0})
-                </button>
-              ))}
+          <div className="mb-8 flex justify-center">
+            <div className="relative inline-block">
+              <button
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                className="flex items-center gap-3 bg-white/95 backdrop-blur-md px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all hover:scale-105 min-w-[280px]"
+              >
+                <div className="bg-accent/10 p-2 rounded-lg">
+                  <Icon name="MapPin" className="text-accent" size={20} />
+                </div>
+                <div className="flex-1 text-left">
+                  <p className="text-xs text-gray-500 font-medium">Город</p>
+                  <p className="text-primary font-bold">{selectedCity}</p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="bg-accent/20 text-accent px-2 py-1 rounded-full text-xs font-bold">
+                    {vacanciesByCity[selectedCity]?.length || 0}
+                  </span>
+                  <Icon 
+                    name={isDropdownOpen ? "ChevronUp" : "ChevronDown"} 
+                    className="text-gray-400" 
+                    size={20} 
+                  />
+                </div>
+              </button>
+
+              {isDropdownOpen && (
+                <div className="absolute top-full left-0 right-0 mt-2 bg-white/95 backdrop-blur-md rounded-xl shadow-2xl max-h-[400px] overflow-y-auto z-50">
+                  {cities.map((city) => (
+                    <button
+                      key={city}
+                      onClick={() => {
+                        setSelectedCity(city);
+                        setIsDropdownOpen(false);
+                      }}
+                      className={`w-full flex items-center justify-between px-6 py-3 hover:bg-accent/10 transition-colors ${
+                        selectedCity === city ? 'bg-accent/20' : ''
+                      }`}
+                    >
+                      <span className={`font-medium ${
+                        selectedCity === city ? 'text-accent' : 'text-gray-700'
+                      }`}>
+                        {city}
+                      </span>
+                      <span className="bg-gray-100 text-gray-600 px-2 py-1 rounded-full text-xs font-bold">
+                        {vacanciesByCity[city]?.length || 0}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         )}
