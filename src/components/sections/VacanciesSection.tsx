@@ -15,6 +15,7 @@ interface Vacancy {
 const VacanciesSection = () => {
   const [vacancies, setVacancies] = useState<Vacancy[]>([]);
   const [loading, setLoading] = useState(true);
+  const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
     const fetchVacancies = async () => {
@@ -34,6 +35,14 @@ const VacanciesSection = () => {
 
     fetchVacancies();
   }, []);
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % Math.min(vacancies.length, 9));
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + Math.min(vacancies.length, 9)) % Math.min(vacancies.length, 9));
+  };
 
   return (
     <section id="vacancies" className="relative py-20 bg-gradient-to-br from-primary via-primary/95 to-accent overflow-hidden">
@@ -60,7 +69,89 @@ const VacanciesSection = () => {
           </div>
         ) : (
           <>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+            <div className="md:hidden relative mb-12">
+              <div className="overflow-hidden">
+                <div 
+                  className="flex transition-transform duration-300 ease-out"
+                  style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+                >
+                  {vacancies.slice(0, 9).map((vacancy) => (
+                    <div
+                      key={vacancy.id}
+                      className="w-full flex-shrink-0 px-4"
+                    >
+                      <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-6 shadow-xl border border-white/20">
+                        <div className="flex items-start justify-between mb-4">
+                          <div className="bg-accent/10 p-3 rounded-xl">
+                            <Icon name="HardHat" className="text-accent" size={28} />
+                          </div>
+                          <div className="bg-green-50 text-green-700 px-3 py-1 rounded-full text-sm font-medium">
+                            Открыто
+                          </div>
+                        </div>
+
+                        <h3 className="text-xl font-bold text-primary mb-3 min-h-[56px]">
+                          {vacancy.title}
+                        </h3>
+
+                        <div className="space-y-2 mb-6">
+                          <div className="flex items-center gap-2 text-gray-600">
+                            <Icon name="MapPin" size={16} />
+                            <span className="text-sm">{vacancy.location}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-gray-600">
+                            <Icon name="Wallet" size={16} />
+                            <span className="text-sm font-semibold text-accent">{vacancy.salary}</span>
+                          </div>
+                        </div>
+
+                        <Button 
+                          className="w-full bg-accent hover:bg-accent/90 text-white"
+                          onClick={() => window.open(vacancy.url, '_blank')}
+                        >
+                          Откликнуться
+                          <Icon name="ExternalLink" size={16} className="ml-2" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {vacancies.length > 0 && (
+                <>
+                  <button
+                    onClick={prevSlide}
+                    className="absolute left-0 top-1/2 -translate-y-1/2 bg-white/20 backdrop-blur-md text-white p-3 rounded-full hover:bg-white/30 transition-colors"
+                    aria-label="Previous"
+                  >
+                    <Icon name="ChevronLeft" size={24} />
+                  </button>
+                  <button
+                    onClick={nextSlide}
+                    className="absolute right-0 top-1/2 -translate-y-1/2 bg-white/20 backdrop-blur-md text-white p-3 rounded-full hover:bg-white/30 transition-colors"
+                    aria-label="Next"
+                  >
+                    <Icon name="ChevronRight" size={24} />
+                  </button>
+
+                  <div className="flex justify-center gap-2 mt-6">
+                    {vacancies.slice(0, 9).map((_, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setCurrentSlide(index)}
+                        className={`h-2 rounded-full transition-all ${
+                          index === currentSlide ? 'w-8 bg-white' : 'w-2 bg-white/40'
+                        }`}
+                        aria-label={`Go to slide ${index + 1}`}
+                      />
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
+
+            <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
               {vacancies.slice(0, 9).map((vacancy) => (
                 <div
                   key={vacancy.id}
